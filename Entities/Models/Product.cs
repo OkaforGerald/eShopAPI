@@ -13,6 +13,8 @@ namespace Entities.Models
 
         public string? Description { get; set; }
 
+        public string? Brand { get; set; }
+
         [Column(TypeName = "decimal(18,4)")]
         public decimal Price { get; set; }
 

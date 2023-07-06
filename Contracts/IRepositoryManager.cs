@@ -10,6 +10,8 @@ namespace Contracts
     {
         IStoreRepository stores { get; }
 
+        IProductRepository products { get; }
+
         Task Save();
     }
 }

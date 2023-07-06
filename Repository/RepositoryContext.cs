@@ -20,6 +20,8 @@ namespace Repository
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new StoreConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductConfiguration());
+            modelBuilder.ApplyConfiguration(new CategoryConfiguration());
         }
 
         public DbSet<Store>? Stores { get; set; }

@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Entities.Models;
+using Shared.Data_Transfer;
+using Shared.Request_Features;
 
 namespace Contracts
 {
-    internal class IProductRepository
+    public interface IProductRepository
     {
+        Task<PagedList<Product>> GetProducts(Guid StoreId, ProductParameters parameters, bool trackChanges);
     }
 }
