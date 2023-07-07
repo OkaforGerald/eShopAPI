@@ -25,5 +25,7 @@ namespace Shared.Request_Features
                 _pageSize = value > maxPageSize ? maxPageSize : value;
             }
         }
+
+        public string? orderBy { get; set; }
     }
 }

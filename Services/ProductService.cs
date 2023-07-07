@@ -23,6 +23,26 @@ namespace Services
             this.mapper = mapper;
         }
 
+        public async Task<ProductsDto> GetProductById(Guid StoreId, Guid ProductId, bool trackChanges)
+        {
+            var store = await repositoryManager.stores.GetStoreById(StoreId, trackChanges);
+
+            if(store is null)
+            {
+                throw new StoreNotFoundException(StoreId);
+            }
+
+            var product = await repositoryManager.products.GetProductById(StoreId, ProductId, trackChanges);
+            
+            if(product is null)
+            {
+                throw new ProductNotFoundException(ProductId);
+            }
+
+            var result = mapper.Map<ProductsDto>(product);
+            return result;
+        }
+
         public async Task<(IEnumerable<ProductsDto> products, Metadata metadata)> GetProducts(Guid StoreId, ProductParameters parameters, bool trackChanges)
         {
             var store = await repositoryManager.stores.GetStoreById(StoreId, trackChanges: false);

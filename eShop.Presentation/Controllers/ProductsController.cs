@@ -27,11 +27,6 @@ namespace eShop.Presentation.Controllers
         {
             try
             {
-                if(StoreID == Guid.Empty)
-                {
-                    return BadRequest();
-                }
-
                 var result = await serviceManager.products.GetProducts(StoreID, parameters, trackChanges: false);
 
                 Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(result.metadata));
@@ -46,6 +41,26 @@ namespace eShop.Presentation.Controllers
                     Message = ex.Message,
                 });
             }
+        }
+
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> ProductsById(Guid StoreID, Guid Id)
+        {
+            try
+            {
+                var result = await serviceManager.products.GetProductById(StoreID, Id, trackChanges: false);
+
+                return Ok(result);
+
+            }catch(NotFoundException ex)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = ex.Message,
+                });
+            }
+
         }
     }
 }

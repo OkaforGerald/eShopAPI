@@ -12,5 +12,7 @@ namespace Contracts
     public interface IProductRepository
     {
         Task<PagedList<Product>> GetProducts(Guid StoreId, ProductParameters parameters, bool trackChanges);
+
+        Task<Product> GetProductById(Guid StoreId,  Guid ProductId, bool trackChanges);
     }
 }

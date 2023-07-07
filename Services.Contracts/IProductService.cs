@@ -11,5 +11,7 @@ namespace Services.Contracts
     public interface IProductService
     {
         Task<(IEnumerable<ProductsDto> products, Metadata metadata)> GetProducts(Guid StoreId, ProductParameters parameters, bool trackChanges);
+
+        Task<ProductsDto> GetProductById(Guid StoreId, Guid ProductId, bool trackChanges);
     }
 }
