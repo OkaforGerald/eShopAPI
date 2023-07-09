@@ -19,6 +19,11 @@ namespace Repository
             
         }
 
+        public void CreateProduct(Product product)
+        {
+            Create(product);
+        }
+
         public async Task<Product> GetProductById(Guid StoreId, Guid ProductId, bool trackChanges)
         {
             var product = await FindByCondition(x => x.StoreId == StoreId && x.Id == ProductId, trackChanges)

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Contracts;
 using Entities.Exceptions;
+using Entities.Models;
 using Services.Contracts;
 using Shared.Data_Transfer;
 using Shared.Request_Features;
@@ -21,6 +22,28 @@ namespace Services
         {
             this.repositoryManager = repositoryManager;
             this.mapper = mapper;
+        }
+
+        public async Task<ProductsDto> CreateProduct(Guid StoreID, string imageUrl, ProductCreationDto productDto)
+        {
+            var product = new Product
+            {
+                StoreId = StoreID,
+                ImageUrl = imageUrl,
+                Price = productDto.Price,
+                Quantity = productDto.Quantity,
+                Brand = productDto.Brand,
+                Description = productDto.Description,
+                Name = productDto.Name,
+                CategoryId = productDto.CategoryId,
+            };
+
+            repositoryManager.products.CreateProduct(product);
+            await repositoryManager.Save();
+
+            var response = mapper.Map<ProductsDto>(product);
+
+            return response;
         }
 
         public async Task<ProductsDto> GetProductById(Guid StoreId, Guid ProductId, bool trackChanges)

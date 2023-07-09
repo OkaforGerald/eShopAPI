@@ -13,5 +13,7 @@ namespace Services.Contracts
         Task<(IEnumerable<ProductsDto> products, Metadata metadata)> GetProducts(Guid StoreId, ProductParameters parameters, bool trackChanges);
 
         Task<ProductsDto> GetProductById(Guid StoreId, Guid ProductId, bool trackChanges);
+
+        Task<ProductsDto> CreateProduct(Guid StoreID, string imageUrl, ProductCreationDto productDto);
     }
 }

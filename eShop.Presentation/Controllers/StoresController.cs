@@ -53,7 +53,11 @@ namespace eShop.Presentation.Controllers
         {
             if(storeDto == null)
             {
-                return BadRequest("Store Creation Object Can Not Be Null");
+                return BadRequest(new
+                {
+                    StatusCode = 400,
+                    Message = "Store Creation Object Can Not Be Null"
+                });
             }
 
             if (!ModelState.IsValid)
@@ -95,7 +99,18 @@ namespace eShop.Presentation.Controllers
         {
             try
             {
-                if(Id.Equals(null) || updateModel is null)
+                if(updateModel is null)
+                {
+                    return BadRequest(
+                        new
+                        {
+                            StatusCode = 400,
+                            Message = "Store Update Model Can Not Be Null"
+                        }
+                        );
+                }
+
+                if (!ModelState.IsValid)
                 {
                     return UnprocessableEntity(ModelState);
                 }

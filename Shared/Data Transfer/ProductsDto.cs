@@ -15,6 +15,8 @@ namespace Shared.Data_Transfer
 
         public string? Description { get; init; }
 
+        public string? ImageUrl { get; set; }
+
         public string? Brand { get; init; }
 
         [Column(TypeName = "decimal(18,4)")]

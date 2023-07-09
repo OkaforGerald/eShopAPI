@@ -5,8 +5,11 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Entities.Exceptions;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
+using Shared.Data_Transfer;
 using Shared.Request_Features;
 
 namespace eShop.Presentation.Controllers
@@ -16,10 +19,12 @@ namespace eShop.Presentation.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IServiceManager serviceManager;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public ProductsController(IServiceManager serviceManager)
+        public ProductsController(IServiceManager serviceManager, IWebHostEnvironment webHostEnvironment)
         {
             this.serviceManager = serviceManager;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
@@ -43,7 +48,7 @@ namespace eShop.Presentation.Controllers
             }
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("{Id}", Name = "ProductById")]
         public async Task<IActionResult> ProductsById(Guid StoreID, Guid Id)
         {
             try
@@ -61,6 +66,58 @@ namespace eShop.Presentation.Controllers
                 });
             }
 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProduct(Guid StoreID, [FromForm] ProductCreationDto product)
+        {
+            if(product is null)
+            {
+                return BadRequest(new
+                {
+                    StatusCode = 400,
+                    Message = "Product Creation Object Can Not Be Null"
+                });
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
+
+            string imageUrl = await GetImageUrlAsync(StoreID, product.Image);
+
+            var response = await serviceManager.products.CreateProduct(StoreID, imageUrl, product);
+
+            return CreatedAtRoute("ProductById", new { StoreID, Id = response.Id }, response);
+        }
+
+        [NonAction]
+        public async Task<string> GetImageUrlAsync(Guid StoreID, IFormFile file)
+        {
+            string ImageUrl = string.Empty;
+
+            string filepath = webHostEnvironment.WebRootPath + "\\Images\\" + StoreID;
+
+            if(!Directory.Exists(filepath))
+            {
+                Directory.CreateDirectory(filepath);
+            }
+
+            string ImagePath = filepath + "\\" + file.FileName;
+            if(System.IO.File.Exists(ImagePath))
+            {
+                System.IO.File.Delete(ImagePath);
+            }
+
+            using(FileStream stream = System.IO.File.Create(ImagePath))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            ImageUrl = Request.Scheme + "://" + Request.Host + "/Images/" + StoreID + "/" + file.FileName;
+
+            return ImageUrl;
         }
     }
 }
