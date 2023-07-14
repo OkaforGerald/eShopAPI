@@ -11,5 +11,7 @@ namespace Services.Contracts
         IStoreService stores { get; }
 
         IProductService products { get; }
+
+        IAuthService auth { get; }
     }
 }

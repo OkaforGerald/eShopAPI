@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Entities.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
 using Shared.Data_Transfer;
@@ -49,6 +50,7 @@ namespace eShop.Presentation.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> CreateStore([FromBody] CreateStoreDto storeDto)
         {
             if(storeDto == null)
@@ -71,6 +73,7 @@ namespace eShop.Presentation.Controllers
         }
 
         [HttpDelete("{Id:Guid}")]
+        [Authorize(Roles ="Administrator")]
         public async Task<IActionResult> DeleteStore(Guid Id)
         {
             try
@@ -95,6 +98,7 @@ namespace eShop.Presentation.Controllers
         }
 
         [HttpPut("{Id:Guid}")]
+        [Authorize(Roles ="Administrator")]
         public async Task<IActionResult> UpdateStore(Guid Id, [FromBody]StoreUpdateDto updateModel)
         {
             try

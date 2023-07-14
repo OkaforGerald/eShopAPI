@@ -1,6 +1,11 @@
 using Contracts;
+using Entities.Models;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Repository;
 using Services;
 using Services.Contracts;
@@ -18,8 +23,46 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
 });
+//builder.Services.AddCors(options => options.AddPolicy("CorsP", builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IServiceManager, ServiceManager>();
+builder.Services.AddAuthentication();
+builder.Services.AddIdentity<User, IdentityRole>(o =>
+{
+    o.Password.RequireUppercase = true;
+    o.Password.RequireLowercase = true;
+    o.Password.RequireDigit = true;
+    o.User.RequireUniqueEmail = true;
+}).AddEntityFrameworkStores<RepositoryContext>()
+.AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(o =>
+{
+    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+
+        ValidIssuer = builder.Configuration.GetSection("JwtSettings")["ValidIssuer"],
+        ValidAudience = builder.Configuration.GetSection("JwtSettings")["ValidAudience"],
+        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JwtSettings")["SigningKey"]))
+    });
+
+//builder.Services.AddAuthentication(o =>
+//{
+//    o.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
+//    o.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme; 
+//}).AddGoogle(googleOptions =>
+//{
+//    googleOptions.ClientId = builder.Configuration.GetSection("Google")["ClientId"];
+//    googleOptions.ClientSecret = builder.Configuration.GetSection("Google")["ClientSecret"];
+//});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -35,6 +78,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+
+// app.UseCors("CorsP");
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

@@ -17,6 +17,8 @@ namespace eShop
             CreateMap<StoreUpdateDto, Store>();
 
             CreateMap<Product, ProductsDto>();
+
+            CreateMap<CreateUserDto, User>();
         }
     }
 }
