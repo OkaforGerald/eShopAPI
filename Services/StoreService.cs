@@ -75,6 +75,8 @@ namespace Services
         {
             var store = await manager.stores.GetStoreById(Id, trackChanges);
 
+            store.UpdatedAt = DateTime.Now;
+
             if (store is null)
             {
                 throw new StoreNotFoundException(Id);

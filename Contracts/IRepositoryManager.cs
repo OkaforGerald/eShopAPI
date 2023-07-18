@@ -12,6 +12,8 @@ namespace Contracts
 
         IProductRepository products { get; }
 
+        ICategoryRepository category { get; }
+
         Task Save();
     }
 }

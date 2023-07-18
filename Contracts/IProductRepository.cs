@@ -15,6 +15,8 @@ namespace Contracts
 
         Task<Product> GetProductById(Guid StoreId,  Guid ProductId, bool trackChanges);
 
+        Task<PagedList<Product>> GetProductsByCategory(Guid CategoryId, ProductParameters parameters, bool trackChanges);
+
         void CreateProduct(Product product);
     }
 }

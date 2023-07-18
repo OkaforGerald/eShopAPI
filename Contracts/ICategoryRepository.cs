@@ -3,10 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Entities.Models;
+using Shared.Data_Transfer;
 
 namespace Contracts
 {
-    internal class ICategoryRepository
+    public interface ICategoryRepository
     {
+        Task<IEnumerable<Category>> GetCategories(bool trackChanges);
+
+        Task<Category> GetCategoryById(Guid Id, bool trackChanges);
+
+        void CreateCategory(Category category);
+
+        void UpdateCategory(Category category);
+
+        void DeleteCategory(Category category);
     }
 }

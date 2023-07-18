@@ -10,6 +10,8 @@ namespace Services.Contracts
     {
         IStoreService stores { get; }
 
+        ICategoryService category { get; }
+
         IProductService products { get; }
 
         IAuthService auth { get; }

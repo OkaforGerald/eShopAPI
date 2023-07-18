@@ -43,5 +43,16 @@ namespace Repository
             return PagedList<Product>.ToPagedList(products, parameters.PageNumber, parameters.PageSize);
 
         }
+
+        public async Task<PagedList<Product>> GetProductsByCategory(Guid CategoryId, ProductParameters parameters, bool trackChanges)
+        {
+            var products = await FindByCondition(x => x.CategoryId == CategoryId, trackChanges)
+                .Where(x => x.Brand.Contains(parameters.searchTerm) || x.Name.Contains(parameters.searchTerm))
+                .Where(x => x.Price >= parameters.minPrice && x.Price <= parameters.maxPrice)
+                .Sort(parameters.orderBy)
+                .ToListAsync();
+
+            return PagedList<Product>.ToPagedList(products, parameters.PageNumber, parameters._pageSize);
+        }
     }
 }
