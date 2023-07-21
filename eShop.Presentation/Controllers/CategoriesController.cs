@@ -128,7 +128,6 @@ namespace eShop.Presentation.Controllers
                 Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(result.metadata));
 
                 return Ok(result.products);
-
             }
             catch (NotFoundException ex)
             {

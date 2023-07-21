@@ -76,7 +76,7 @@ namespace Services
 
             if (category is null)
             {
-                throw new StoreNotFoundException(CategoryId);
+                throw new CategoryNotFoundException(CategoryId);
             }
 
             var products = await repositoryManager.products.GetProductsByCategory(CategoryId, parameters, trackChanges: false);

@@ -1,0 +1,123 @@
+<!-- boilerplate code -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" xmlns="https://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Order Template</title>
+
+<style type="text/css">
+
+    *,*::before, *::after{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body{
+        font-family: sans-serif;
+        padding: 2rem 4rem;
+        display: grid;
+        place-items: center;
+        /* background-color: rgb(226, 226, 238); */
+        background: inherit;
+    }
+
+    header{
+        width: 100%;
+        max-width: 60rem;
+        text-align: center;
+        background-color: rgb(185, 85, 197);
+        color: white;
+        padding: 1.5rem 1rem;
+        display: grid;
+        gap: 0.7rem;
+        border-radius: 1rem 1rem 0 0;
+    }
+
+    .container{
+        max-width: 38rem;
+       
+        /* background-color: whitesmoke; */
+    }
+
+    .text-wrapper{
+        display: grid;
+        gap: 2rem;
+        padding-block: 2rem;
+        padding-inline: 1.5rem;
+        background-color: whitesmoke;
+        border-radius: 0 0 1rem 1rem;
+    }
+
+    #product-link{
+        width: 20rem;
+        padding: 1rem;
+        background-color: rgb(88, 113, 239);
+        text-align: center;
+        text-decoration: none;
+        color: whitesmoke;
+        border-radius: 0.5rem;
+        font-size: 1.4rem;
+        font-weight: 800;
+        place-self: center;
+    }
+
+    #product-link:hover{
+        background-color: rgb(64, 83, 182);
+    }
+
+</style>
+</head>
+<body>
+
+    <div class="container">
+
+        <header>
+            <h1>New Order</h1>
+            <p id="currentDateTime"></p>
+        </header>
+
+        <div class="text-wrapper">
+            <p>Good day, I'll like to place an order for:</p>
+            
+            <p><b>Product:</b> ##Product</p>
+            
+            <p><b>Description:</b> ##Description</p>
+            
+            <p><b>Brand:</b> ##Brand</p>
+            
+            <p><b>Price(&#8358;):</b> ##Price</p>
+            
+            <a href="##Link" id="product-link" target="_blank">Link to product</a>
+        </div>
+       
+    </div>
+    
+
+<!-- script for the date and time -->
+<script>
+
+    function updateDateTime() {
+        const currentDateTime = new Date();
+        const formattedDateTime = currentDateTime.toLocaleString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+        });
+
+        document.getElementById("currentDateTime").textContent = formattedDateTime;
+    }
+    updateDateTime();
+</script>
+
+    
+</body>
+</html>

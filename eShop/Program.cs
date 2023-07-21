@@ -1,4 +1,5 @@
 using Contracts;
+using EmailSender;
 using Entities.Models;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,13 +19,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(eShop.Presentation.AssemblyReference).Assembly);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+var emailConfig = builder.Configuration
+        .GetSection("EmailConfiguration")
+        .Get<EmailConfiguration>();
+builder.Services.AddSingleton(emailConfig);
+builder.Services.AddScoped<IEmailSender, EmailSending>();
 builder.Services.AddDbContext<RepositoryContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("sqlConnection")));
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
 });
-//builder.Services.AddCors(options => options.AddPolicy("CorsP", builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
+builder.Services.AddCors(options => options.AddPolicy("CorsP", builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IServiceManager, ServiceManager>();
 builder.Services.AddAuthentication();
@@ -108,7 +114,7 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
-// app.UseCors("CorsP");
+app.UseCors("CorsP");
 
 app.UseAuthentication();
 

@@ -82,5 +82,38 @@ namespace Services
             return (products: result, metadata: products.Metadata);
 
         }
+
+        public async Task<(string text, string recipient)> GenerateWhatsappText(Guid StoreId, Guid ProductId)
+        {
+            var store = await repositoryManager.stores.GetStoreById(StoreId, false);
+                                                                                                       
+            if (store is null)
+            {
+                throw new StoreNotFoundException(StoreId);
+            }
+
+            var products = await repositoryManager.products.GetProductById(StoreId, ProductId, trackChanges: false);
+
+            string text = $"Good day, I'll like to place an order for:\r\n\tProduct : {products.Name},\r\n\tDescription: {products.Description},\r\n\tBrand: {products.Brand},\r\n\tPrice: {products.Price},\r\n\tQuantity: 1,\r\n\r\nLink: ProdLink";
+            string recipient = store.PhoneNumber.Replace("+", "").Trim();
+
+            return (text, recipient);
+        }
+
+        public async Task<(Product products, string recipient)> GenerateEmailText(Guid StoreId, Guid ProductId)
+        {
+            var store = await repositoryManager.stores.GetStoreById(StoreId, false);
+
+            if (store is null)
+            {
+                throw new StoreNotFoundException(StoreId);
+            }
+
+            var products = await repositoryManager.products.GetProductById(StoreId, ProductId, trackChanges: false);
+
+            string? recipient = store.Email;
+
+            return (products, recipient);
+        }
     }
 }

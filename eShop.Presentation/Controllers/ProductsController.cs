@@ -5,11 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using EmailSender;
 using Entities.Exceptions;
+using Entities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Services;
 using Services.Contracts;
 using Shared.Data_Transfer;
 using Shared.Request_Features;
@@ -22,11 +25,13 @@ namespace eShop.Presentation.Controllers
     {
         private readonly IServiceManager serviceManager;
         private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly IEmailSender sender;
 
-        public ProductsController(IServiceManager serviceManager, IWebHostEnvironment webHostEnvironment)
+        public ProductsController(IServiceManager serviceManager, IWebHostEnvironment webHostEnvironment, IEmailSender sender)
         {
             this.serviceManager = serviceManager;
             this.webHostEnvironment = webHostEnvironment;
+            this.sender = sender;   
         }
 
         [HttpGet]
@@ -51,7 +56,7 @@ namespace eShop.Presentation.Controllers
         }
 
         [HttpGet("{Id}", Name = "ProductById")]
-        public async Task<IActionResult> ProductsById(Guid StoreID, Guid Id)
+        public async Task<IActionResult> ProductById(Guid StoreID, Guid Id)
         {
             try
             {
@@ -94,7 +99,56 @@ namespace eShop.Presentation.Controllers
             return CreatedAtRoute("ProductById", new { StoreID, Id = response.Id }, response);
         }
 
-        [NonAction]
+        [HttpGet("{Id}/order/whatsapp")]
+        public async Task<IActionResult> CheckoutProduct(Guid StoreID, Guid Id)
+        {
+            try
+            {
+                var message = await serviceManager.products.GenerateWhatsappText(StoreID, Id);
+
+                var link = Request.Scheme + "://" + Request.Host + Url.Action("ProductById", "Products", new { StoreID, Id = Id });
+                string text = message.text.Replace("ProdLink", link);
+
+                var uri = new Uri("https://api.whatsapp.com/send/?phone=" + message.recipient + "&text=" + text + "&type=phone_number");
+                return Redirect(uri.AbsoluteUri);
+
+            }catch(NotFoundException ex)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpGet("{Id}/order/email")]
+        public async Task<IActionResult> CheckoutProductMail(Guid StoreID, Guid Id)
+        {
+            try
+            {
+                var message = await serviceManager.products.GenerateEmailText(StoreID, Id);
+
+                var link = Request.Scheme + "://" + Request.Host + Url.Action("ProductById", "Products", new { StoreID, Id = Id });
+
+                var mail = new Message(new string[] { message.recipient }, "Order Notification", link, message.products);
+                await sender.SendEmail(mail);
+
+                return NoContent();
+
+
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+            [NonAction]
         public async Task<string> GetImageUrlAsync(Guid StoreID, IFormFile file)
         {
             string ImageUrl = string.Empty;
