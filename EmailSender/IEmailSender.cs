@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EmailSender;
+using MimeKit;
 using Services;
 
 namespace Services.Contracts
 {
     public interface IEmailSender
     {
-        Task SendEmail(Message message);
+        MimeMessage CreateEmailMessage(Message message);
+
+        Task SendAsync(List<MimeMessage> mailMessages);
     }
 }

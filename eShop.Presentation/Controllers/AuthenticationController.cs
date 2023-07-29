@@ -98,7 +98,6 @@ namespace eShop.Presentation.Controllers
         }
 
         [HttpPost("refresh-token")]
-        [Authorize]
         public async Task<IActionResult> RefreshToken([FromBody] TokenDto token)
         {
             if(token is null)

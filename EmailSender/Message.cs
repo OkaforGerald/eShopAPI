@@ -15,14 +15,16 @@ namespace EmailSender
             public string Subject { get; set; }
             public string Content { get; set; }
             public Product? Product { get; set; }
+            public string Customer { get; set; }
 
-            public Message(IEnumerable<string> to, string subject, string content, Product product)
+            public Message(IEnumerable<string> to, string subject, string content, Product product, string customer)
             {
                 To = new List<MailboxAddress>();
                 To.AddRange(to.Select(x => new MailboxAddress(x, x)));
                 Subject = subject;
                 Content = content;
                 Product = product;
+                Customer = customer;
             }
         }
 }

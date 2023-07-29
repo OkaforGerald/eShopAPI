@@ -18,6 +18,8 @@ namespace eShop
 
             CreateMap<Product, ProductsDto>();
 
+            CreateMap<Product, ProductModifyingDto>().ReverseMap();
+
             CreateMap<CreateUserDto, User>();
 
             CreateMap<Category, CategoryDto>();

@@ -15,7 +15,11 @@ namespace Services.Contracts
 
         Task<ProductsDto> GetProductById(Guid StoreId, Guid ProductId, bool trackChanges);
 
-        Task<ProductsDto> CreateProduct(Guid StoreID, string imageUrl, ProductCreationDto productDto);
+        Task<ProductsDto> CreateProduct(Guid StoreID, string imageUrl, ProductModifyingDto productDto);
+
+        Task DeleteProducts(Guid StoreId, Guid ProductId, bool trackChanges);
+
+        Task UpdateProduct(Guid StoreId, Guid ProductId, string imageUrl, ProductModifyingDto product);
 
         Task<(string text, string recipient)> GenerateWhatsappText(Guid StoreId, Guid ProductId);
 

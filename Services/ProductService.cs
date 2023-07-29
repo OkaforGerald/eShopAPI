@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace Services
             this.mapper = mapper;
         }
 
-        public async Task<ProductsDto> CreateProduct(Guid StoreID, string imageUrl, ProductCreationDto productDto)
+        public async Task<ProductsDto> CreateProduct(Guid StoreID, string imageUrl, ProductModifyingDto productDto)
         {
             var product = new Product
             {
@@ -114,6 +115,60 @@ namespace Services
             string? recipient = store.Email;
 
             return (products, recipient);
+        }
+
+        public async Task DeleteProducts(Guid StoreId, Guid ProductId, bool trackChanges)
+        {
+            var store = await repositoryManager.stores.GetStoreById(StoreId, false);
+
+            if(store is null)
+            {
+                throw new StoreNotFoundException(StoreId);
+            }
+
+            var product = await repositoryManager.products.GetProductById(StoreId, ProductId, false);
+
+            if(product is null)
+            {
+                throw new StoreNotFoundException(ProductId);
+            }
+
+            var filePath = Directory.GetCurrentDirectory() + "\\wwwroot\\" + product.ImageUrl.Substring(product.ImageUrl.IndexOf('I')).Replace("/","\\");
+            
+            if(File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            repositoryManager.products.DeleteProduct(product);
+        }
+
+        public async Task UpdateProduct(Guid StoreId, Guid ProductId, string imageUrl, ProductModifyingDto productDto)
+        {
+            var store = await repositoryManager.stores.GetStoreById(StoreId, false);
+
+            if (store is null)
+            {
+                throw new StoreNotFoundException(StoreId);
+            }
+
+            var product = await repositoryManager.products.GetProductById(StoreId, ProductId, true);
+
+            if (product is null)
+            {
+                throw new StoreNotFoundException(ProductId);
+            }
+
+            var filePath = Directory.GetCurrentDirectory() + "\\wwwroot\\" + product.ImageUrl.Substring(product.ImageUrl.IndexOf('I')).Replace("/", "\\");
+
+            if (!product.ImageUrl.Contains(productDto.Image.FileName) && File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            mapper.Map(productDto, product);
+            product.ImageUrl = imageUrl;
+            await repositoryManager.Save();
         }
     }
 }

@@ -54,6 +54,7 @@ builder.Services.AddAuthentication(o =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
+        ClockSkew = TimeSpan.Zero,
 
         ValidIssuer = builder.Configuration.GetSection("JwtSettings")["ValidIssuer"],
         ValidAudience = builder.Configuration.GetSection("JwtSettings")["ValidAudience"],

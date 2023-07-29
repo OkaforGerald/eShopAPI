@@ -76,7 +76,7 @@ namespace eShop.Presentation.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> CreateProduct(Guid StoreID, [FromForm] ProductCreationDto product)
+        public async Task<IActionResult> CreateProduct(Guid StoreID, [FromForm] ProductModifyingDto product)
         {
             if(product is null)
             {
@@ -99,7 +99,7 @@ namespace eShop.Presentation.Controllers
             return CreatedAtRoute("ProductById", new { StoreID, Id = response.Id }, response);
         }
 
-        [HttpGet("{Id}/order/whatsapp")]
+        [HttpGet("{Id:Guid}/order/whatsapp")]
         public async Task<IActionResult> CheckoutProduct(Guid StoreID, Guid Id)
         {
             try
@@ -122,8 +122,8 @@ namespace eShop.Presentation.Controllers
             }
         }
 
-        [HttpGet("{Id}/order/email")]
-        public async Task<IActionResult> CheckoutProductMail(Guid StoreID, Guid Id)
+        [HttpPost("{Id:Guid}/order/email")]
+        public async Task<IActionResult> CheckoutProductMail(Guid StoreID, Guid Id, string customer)
         {
             try
             {
@@ -131,8 +131,15 @@ namespace eShop.Presentation.Controllers
 
                 var link = Request.Scheme + "://" + Request.Host + Url.Action("ProductById", "Products", new { StoreID, Id = Id });
 
-                var mail = new Message(new string[] { message.recipient }, "Order Notification", link, message.products);
-                await sender.SendEmail(mail);
+                var mail = new Message(new string[] { message.recipient }, "Order Notification", link, message.products, customer);
+                var userMail = new Message(new string[] { customer }, "Order Notification", null, message.products, customer);
+
+                var storeMessage = sender.CreateEmailMessage(mail);
+                var userMessage = sender.CreateEmailMessage(userMail);
+                await sender.SendAsync(new List<MimeKit.MimeMessage>()
+                {
+                    storeMessage, userMessage
+                });
 
                 return NoContent();
 
@@ -148,7 +155,48 @@ namespace eShop.Presentation.Controllers
             }
         }
 
-            [NonAction]
+        [HttpDelete("{Id:Guid}")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> DeleteProduct(Guid StoreID, Guid Id)
+        {
+            try
+            {
+                await serviceManager.products.DeleteProducts(StoreID, Id, false);
+
+                return NoContent();
+            }catch(NotFoundException e)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = e.Message,
+                });
+            }
+        }
+
+        [HttpPut("{Id:Guid}")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> UpdateProduct(Guid StoreID, Guid Id, [FromForm] ProductModifyingDto productModifyingDto)
+        {
+            try
+            {
+                string imageUrl = await GetImageUrlAsync(StoreID, productModifyingDto.Image);
+
+                await serviceManager.products.UpdateProduct(StoreID, Id, imageUrl, productModifyingDto);
+
+                return NoContent();
+            }
+            catch (NotFoundException e)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = e.Message,
+                });
+            }
+        }
+
+        [NonAction]
         public async Task<string> GetImageUrlAsync(Guid StoreID, IFormFile file)
         {
             string ImageUrl = string.Empty;

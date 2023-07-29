@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Shared.Data_Transfer
 {
-    public record ProductCreationDto
+    public record ProductModifyingDto
     {
         [Required(ErrorMessage ="Name Required")]
         public string? Name { get; init; }
