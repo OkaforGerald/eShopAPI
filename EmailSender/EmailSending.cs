@@ -30,7 +30,7 @@ namespace Services
             emailMessage.From.Add(new MailboxAddress("Adsofun✨", _emailConfig.UserName));
             emailMessage.To.AddRange(message.To);
             emailMessage.Subject = message.Subject;
-            if (message.Product != null)
+            if (message.Product != null && message.Content != null)
             {
                 using (StreamReader source = System.IO.File.OpenText(Directory.GetCurrentDirectory() + "\\wwwroot\\Templates\\index.html"))
                 {
