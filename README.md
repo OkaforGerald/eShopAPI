@@ -88,7 +88,7 @@ curl -X GET http://localhost:7202/api/category/products?categoryId=d88874a9-1b18
     "id": "e4d6ada5-da2e-4ca7-1e71-08dbe0ad756e",
     "name": "Zebra wax ribbon 60mm x 450m",
     "description": "Wax ribbons work best with paper materials when fast print speeds are required, and in applications with little to no exposure to chemicals or abrasion. Ideal for general purpose labeling, shelf labels, shipping and receiving, inventory tracking, warehousing, or retail tags and labels Suitable for printing on most uncoated and coated paper labels and tags Good print quality at speeds up to 254mm/sec (10ips) and 152mm/sec (6ips) for rotated barcodes",
-    "imageUrl": "https://72gjvchc-7202.uks1.devtunnels.ms/Images/966d779e-c693-4abe-bbc3-325ecc71b48d/Zebra wax ribbon 60mm x 450m.jpg",
+    "imageUrl": "https://localhost:7202/Images/966d779e-c693-4abe-bbc3-325ecc71b48d/Zebra wax ribbon 60mm x 450m.jpg",
     "brand": "Zebra",
     "price": 5069,
     "quantity": 5
@@ -97,7 +97,7 @@ curl -X GET http://localhost:7202/api/category/products?categoryId=d88874a9-1b18
     "id": "8a8ef844-56b6-4e4a-1e70-08dbe0ad756e",
     "name": "Zebra wax ribbon 110mm x 450m",
     "description": "Wax ribbons work best with paper materials when fast print speeds are required, and in applications with little to no exposure to chemicals or abrasion. Ideal for general purpose labeling, shelf labels, shipping and receiving, inventory tracking, warehousing, or retail tags and labels Suitable for printing on most uncoated and coated paper labels and tags Good print quality at speeds up to 254mm/sec (10ips) and 152mm/sec (6ips) for rotated barcodes",
-    "imageUrl": "https://72gjvchc-7202.uks1.devtunnels.ms/Images/966d779e-c693-4abe-bbc3-325ecc71b48d/Zebra wax ribbon 110mm x 450m.jpg",
+    "imageUrl": "https://localhost:7202/Images/966d779e-c693-4abe-bbc3-325ecc71b48d/Zebra wax ribbon 110mm x 450m.jpg",
     "brand": "Zebra",
     "price": 6358.14,
     "quantity": 6
