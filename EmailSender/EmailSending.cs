@@ -9,10 +9,9 @@ using EmailSender;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
-using Services.Contracts;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
-namespace Services
+namespace EmailSender
 {
     public class EmailSending : IEmailSender
     {
@@ -58,16 +57,17 @@ namespace Services
 
                 emailMessage.Body = builder.ToMessageBody();
             }
+       
             return emailMessage;
         }
         public async Task SendAsync(List<MimeMessage> mailMessages)
         {
-            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+           System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
             using (var client = new SmtpClient())
             {
                 try
                 {
-                    await client.ConnectAsync(_emailConfig.SmtpServer, _emailConfig.Port, SecureSocketOptions.StartTls);
+                    await client.ConnectAsync(_emailConfig.SmtpServer,_emailConfig.Port, SecureSocketOptions.StartTls);
                     client.AuthenticationMechanisms.Remove("XOAUTH2");
                     await client.AuthenticateAsync(_emailConfig.UserName, _emailConfig.Password);
                     foreach (MimeMessage message in mailMessages)
@@ -78,7 +78,7 @@ namespace Services
                 }
                 catch(Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.Message.ToString());
                 }
                 finally
                 {

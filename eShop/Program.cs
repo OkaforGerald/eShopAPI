@@ -73,7 +73,7 @@ builder.Services.AddAuthentication(o =>
 
 builder.Services.AddSwaggerGen(opt =>
 {
-    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Tweeter-API", Version = "v1" });
+    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "eShopApi", Version = "v1" });
     opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -103,6 +103,23 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+using(var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    try
+    {
+        var dbContext = services.GetRequiredService<RepositoryContext>();
+        if (dbContext.Database.IsSqlServer())
+        {
+            dbContext.Database.Migrate();
+        }
+    }catch(Exception ex)
+    {
+        throw;
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

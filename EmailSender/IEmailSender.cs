@@ -5,9 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using EmailSender;
 using MimeKit;
-using Services;
 
-namespace Services.Contracts
+namespace EmailSender
 {
     public interface IEmailSender
     {

@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShop.Presentation", "eShop.Presentation\eShop.Presentation.csproj", "{0A4D1C2B-6023-44AF-9F39-502027EE50F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailSender", "EmailSender\EmailSender.csproj", "{F9616067-F045-4BB8-B1D9-FC156884ACF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailSender", "EmailSender\EmailSender.csproj", "{F9616067-F045-4BB8-B1D9-FC156884ACF0}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{A10CAD50-17B5-4526-BF08-04AFB59EBBE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{F9616067-F045-4BB8-B1D9-FC156884ACF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9616067-F045-4BB8-B1D9-FC156884ACF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9616067-F045-4BB8-B1D9-FC156884ACF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A10CAD50-17B5-4526-BF08-04AFB59EBBE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A10CAD50-17B5-4526-BF08-04AFB59EBBE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A10CAD50-17B5-4526-BF08-04AFB59EBBE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A10CAD50-17B5-4526-BF08-04AFB59EBBE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

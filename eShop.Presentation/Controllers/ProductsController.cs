@@ -122,7 +122,7 @@ namespace eShop.Presentation.Controllers
             }
         }
 
-        [HttpPost("{Id:Guid}/order/email")]
+        [HttpGet("{Id:Guid}/order/email")]
         public async Task<IActionResult> CheckoutProductMail(Guid StoreID, Guid Id, string customer)
         {
             try
