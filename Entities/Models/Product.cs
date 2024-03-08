@@ -28,5 +28,7 @@ namespace Entities.Models
         public Guid StoreId { get; set; }
         public Store? Store { get; set;}
 
+        public ICollection<CartItem>? CartItems { get; set; }
+
     }
 }

@@ -20,6 +20,9 @@ namespace Entities.Models
 
         public string? Country { get; set; }
 
+        public User? User { get; set; }
+        public string? UserId { get; set; }
+
         public ICollection<Product>? Products { get; set; }
     }
 }

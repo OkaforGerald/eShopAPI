@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Entities.Models;
-using Shared.Data_Transfer;
+using SharedAPI.Data_Transfer;
 
 namespace Contracts
 {

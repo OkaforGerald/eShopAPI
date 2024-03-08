@@ -1,0 +1,31 @@
+﻿@page "/store/{StoreID}/products/{Id}"
+
+@if (_product == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <h3 class="mb-5"><b>Product Details</b></h3>
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <img class="img-fluid" src="@_product.ImageUrl">       
+        </div>
+        <div class="col-md-6">
+            <h3>@_product.Name</h3>
+            <p class="mb-4">@_product.Description</p>
+            <p style="color:gold"><span class="oi oi-home" aria-hidden="true"/>@_product.Store</p>
+            <p class="mb-4">
+                <b>
+                    @_product.Price.ToString("C")&nbsp;(@_product.Quantity items in stock)
+                </b>
+            </p>
+            <div>
+                <button class="btn btn-success"
+                @onclick ="() => (AddToCart_Click(_product.Id))"
+                ><b>Add to Cart</b></button>
+            </div>
+        </div>
+
+    </div>
+}

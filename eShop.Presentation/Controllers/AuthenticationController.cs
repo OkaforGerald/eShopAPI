@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
-using Shared.Data_Transfer;
+using SharedAPI.Data_Transfer;
 
 namespace eShop.Presentation.Controllers
 {
@@ -44,13 +44,13 @@ namespace eShop.Presentation.Controllers
 
             if (!result.Succeeded)
             {
-                foreach(var error in result.Errors)
-                {
-                    ModelState.TryAddModelError(error.Code, error.Description);
-                }
-                return BadRequest(ModelState);
+                var errors = result.Errors.Select(e => e.Description);
+                return BadRequest(new RegistrationResponseDto { Errors = errors });
             }
-            return StatusCode(201, "Registration successful");
+            return StatusCode(201, new RegistrationResponseDto
+            {
+                IsSuccessfulRegistration = true
+            });
         }
 
         [HttpPost("login")]
@@ -76,17 +76,16 @@ namespace eShop.Presentation.Controllers
 
                 if(!IsAuthenticated)
                 {
-                    return Unauthorized(new
+                    return Unauthorized(new AuthResponseDto
                     {
-                        StatusCode = 401,
-                        Message = "Invalid Username/Password"
+                        ErrorMessage = "Invalid Username/Password"
                     });
                 }
 
                 var token = await serviceManager.auth.CreateToken(populateExp: true);
-
-                return Ok(token);
-            }catch(Exception ex)
+                return Ok(new AuthResponseDto { IsAuthSuccessful = true, accessToken = token.accessToken, refreshToken = token.refreshToken });
+            }
+            catch(Exception ex)
             {
                 return BadRequest(new
                 {

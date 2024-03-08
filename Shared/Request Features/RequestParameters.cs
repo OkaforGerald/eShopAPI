@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shared.Request_Features
+namespace SharedAPI.Request_Features
 {
     public class RequestParameters
     {
@@ -26,6 +26,6 @@ namespace Shared.Request_Features
             }
         }
 
-        public string? orderBy { get; set; }
+        public string? orderBy { get; set; } = "";
     }
 }

@@ -9,8 +9,8 @@ using Entities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
-using Shared.Data_Transfer;
-using Shared.Request_Features;
+using SharedAPI.Data_Transfer;
+using SharedAPI.Request_Features;
 
 namespace eShop.Presentation.Controllers
 {
@@ -118,9 +118,17 @@ namespace eShop.Presentation.Controllers
             return CreatedAtRoute("CategoryById", new { Id = category.Id }, category);
         }
 
-        [HttpGet("products")]
+        [HttpGet("{CategoryId:Guid}/products")]
         public async Task<IActionResult> GetProductsByCategory(Guid CategoryId, [FromQuery] ProductParameters parameters)
         {
+            if (parameters.orderBy is null)
+            {
+                parameters.orderBy = "";
+            }
+            if (parameters.searchTerm is null)
+            {
+                parameters.searchTerm = "";
+            }
             try
             {
                 var result = await serviceManager.category.GetProducts(CategoryId, parameters, trackChanges: false);

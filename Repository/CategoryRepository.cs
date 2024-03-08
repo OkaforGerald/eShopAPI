@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Contracts;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
-using Shared.Data_Transfer;
+using SharedAPI.Data_Transfer;
 
 namespace Repository
 {

@@ -7,29 +7,29 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Shared.Data_Transfer
+namespace SharedAPI.Data_Transfer
 {
     public record ProductModifyingDto
     {
         [Required(ErrorMessage ="Name Required")]
-        public string? Name { get; init; }
+        public string? Name { get; set; }
 
         [Required(ErrorMessage = "Description Required")]
-        public string? Description { get; init; }
+        public string? Description { get; set; }
 
         [Required(ErrorMessage = "Brand Required")]
-        public string? Brand { get; init; }
+        public string? Brand { get; set; }
 
         [Required(ErrorMessage = "Price Required")]
-        public decimal Price { get; init; }
+        public decimal Price { get; set; }
 
         [Required(ErrorMessage = "Quantity Required")]
-        public int Quantity { get; init; }
+        public int Quantity { get; set; }
 
         [Required(ErrorMessage = "Category Required")]
         public Guid CategoryId { get; set; }
 
         [Required(ErrorMessage = "Image Required")]
-        public IFormFile? Image { get; init; }
+        public IFormFile? Image { get; set; }
     }
 }

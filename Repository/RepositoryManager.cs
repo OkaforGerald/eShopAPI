@@ -13,6 +13,8 @@ namespace Repository
         private readonly Lazy<IStoreRepository> storeRepository;
         private readonly Lazy<IProductRepository> productRepository;
         private readonly Lazy<ICategoryRepository> categoryRepository;
+        private readonly Lazy<ICartItemRepository> cartItemRepository;
+        private readonly Lazy<ICartRepository> cartRepository;
 
         public RepositoryManager(RepositoryContext repositoryContext)
         {
@@ -20,6 +22,8 @@ namespace Repository
             storeRepository = new Lazy<IStoreRepository>(new StoreRepository(repositoryContext));
             productRepository = new Lazy<IProductRepository>(new ProductRepository(repositoryContext));
             categoryRepository = new Lazy<ICategoryRepository>(new CategoryRepository(repositoryContext));
+            cartItemRepository = new Lazy<ICartItemRepository>(new CartItemRepository(repositoryContext));
+            cartRepository = new Lazy<ICartRepository>(new CartRepository(repositoryContext));
         }
 
         public async Task Save()
@@ -32,5 +36,9 @@ namespace Repository
         public IProductRepository products => productRepository.Value;
 
         public ICategoryRepository category => categoryRepository.Value;
+
+        public ICartItemRepository cartItem => cartItemRepository.Value;
+
+        public ICartRepository cart => cartRepository.Value;
     }
 }

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Entities.Models;
-using Shared.Data_Transfer;
-using Shared.Request_Features;
+using SharedAPI.Data_Transfer;
+using SharedAPI.Request_Features;
 
 namespace Contracts
 {

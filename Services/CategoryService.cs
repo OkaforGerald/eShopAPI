@@ -8,8 +8,8 @@ using Contracts;
 using Entities.Exceptions;
 using Entities.Models;
 using Services.Contracts;
-using Shared.Data_Transfer;
-using Shared.Request_Features;
+using SharedAPI.Data_Transfer;
+using SharedAPI.Request_Features;
 
 namespace Services
 {

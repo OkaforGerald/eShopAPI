@@ -7,8 +7,8 @@ using Contracts;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Repository.Extensions;
-using Shared.Data_Transfer;
-using Shared.Request_Features;
+using SharedAPI.Data_Transfer;
+using SharedAPI.Request_Features;
 
 namespace Repository
 {

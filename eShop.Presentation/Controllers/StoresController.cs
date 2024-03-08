@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Entities.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
-using Shared.Data_Transfer;
+using SharedAPI.Data_Transfer;
+using SharedAPI.Request_Features;
 
 namespace eShop.Presentation.Controllers
 {
@@ -23,11 +25,22 @@ namespace eShop.Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetStores()
+        public async Task<IActionResult> GetStores([FromQuery] StoreParameters parameters)
         {
-            var response = await serviceManager.stores.GetStores(trackChanges: false);
+           if(parameters.orderBy is null)
+            {
+                parameters.orderBy = "";
+            }
+            if (parameters.searchTerm is null)
+            {
+                parameters.searchTerm = "";
+            }
 
-            return Ok(response);
+            var response = await serviceManager.stores.GetStores(parameters, trackChanges: false);
+
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(response.metadata));
+
+            return Ok(response.stores);
         }
 
         [HttpGet("{Id:guid}", Name = "StoreByID")]
@@ -35,7 +48,9 @@ namespace eShop.Presentation.Controllers
         {
             try
             {
-                var response = await serviceManager.stores.GetStoreById(Id, trackChanges: false);
+                var username = HttpContext?.User?.Identity?.Name;
+
+                var response = await serviceManager.stores.GetStoreById(Id, username, trackChanges: false);
 
                 return Ok(response);
 
@@ -50,7 +65,7 @@ namespace eShop.Presentation.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrator")]
+        [Authorize]
         public async Task<IActionResult> CreateStore([FromBody] CreateStoreDto storeDto)
         {
             if(storeDto == null)
@@ -67,13 +82,27 @@ namespace eShop.Presentation.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
-            var response = await serviceManager.stores.CreateStore(storeDto);
+            var username = HttpContext?.User?.Identity?.Name;
 
-            return CreatedAtRoute("StoreByID",new { Id = response.Id }, response);
+            try
+            {
+                var response = await serviceManager.stores.CreateStore(username, storeDto);
+                return CreatedAtRoute("StoreByID", new { Id = response.Id }, response);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new
+                {
+                    StatusCode = 404,
+                    Error = ex.Message
+                });
+            }
+
+            
         }
 
         [HttpDelete("{Id:Guid}")]
-        [Authorize(Roles ="Administrator")]
+        [Authorize]
         public async Task<IActionResult> DeleteStore(Guid Id)
         {
             try
@@ -83,7 +112,9 @@ namespace eShop.Presentation.Controllers
                     return UnprocessableEntity(ModelState);
                 }
 
-                await serviceManager.stores.DeleteStore(Id);
+                var username = HttpContext?.User?.Identity?.Name;
+                
+                await serviceManager.stores.DeleteStore(username, Id);
 
                 return NoContent();
 
@@ -92,6 +123,13 @@ namespace eShop.Presentation.Controllers
                 return NotFound(new
                 {
                     StatusCode = 404,
+                    Error = ex.Message
+                });
+            }catch(Exception ex)
+            {
+                return Unauthorized(new
+                {
+                    StatusCode = 401,
                     Error = ex.Message
                 });
             }
@@ -119,7 +157,9 @@ namespace eShop.Presentation.Controllers
                     return UnprocessableEntity(ModelState);
                 }
 
-                await serviceManager.stores.UpdateStore(Id, updateModel, trackChanges: true);
+                var username = HttpContext?.User?.Identity?.Name;
+
+                await serviceManager.stores.UpdateStore(Id, username, updateModel, trackChanges: true);
 
                 return NoContent();
             }catch(NotFoundException ex)

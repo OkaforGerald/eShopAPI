@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Shared.Data_Transfer;
+using SharedAPI.Data_Transfer;
 
 namespace Services.Contracts
 {

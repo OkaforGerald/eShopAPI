@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shared.Data_Transfer
+namespace SharedAPI.Data_Transfer
 {
     public record StoresDto
     {
@@ -19,5 +19,9 @@ namespace Shared.Data_Transfer
         public string? Url { get; init; }
 
         public string? FullAddress { get; init; }
+
+        public string? OwnedBy { get; init; }
+
+        public bool requestedByOwner { get; set; } = false;
     }
 }

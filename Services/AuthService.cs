@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Services.Contracts;
-using Shared.Data_Transfer;
+using SharedAPI.Data_Transfer;
 
 namespace Services
 {
@@ -50,7 +50,8 @@ namespace Services
             }
             await userManager.UpdateAsync(User);
 
-            return new TokenDto(accessToken: accessToken, refreshToken: User.RefreshToken);
+            return new TokenDto
+            { accessToken = accessToken, refreshToken = User.RefreshToken };
         }
 
         public async Task<IdentityResult> RegisterUser(CreateUserDto createUserDto)
@@ -112,7 +113,7 @@ namespace Services
             var tokenOptions = new JwtSecurityToken(issuer: settings["ValidIssuer"],
                 signingCredentials: signingCreds,
                 audience: settings["ValidAudience"],
-                expires: DateTime.Now.AddMinutes(Convert.ToDouble(settings["expires"])),
+                expires: DateTime.Now.AddDays(Convert.ToDouble(settings["expires"])),
                 claims: claims);
 
             return tokenOptions;

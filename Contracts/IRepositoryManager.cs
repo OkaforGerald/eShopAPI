@@ -14,6 +14,10 @@ namespace Contracts
 
         ICategoryRepository category { get; }
 
+        ICartItemRepository cartItem { get; }
+
+        ICartRepository cart { get; }
+
         Task Save();
     }
 }

@@ -5,23 +5,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shared.Data_Transfer
+namespace SharedAPI.Data_Transfer
 {
     public record ProductsDto
     {
-        public Guid Id { get; init; }
+        public Guid Id { get; set; }
 
-        public string? Name { get; init; }
+        public Guid StoreId { get; set; }
 
-        public string? Description { get; init; }
+        public string? Name { get; set; }
+
+        public string? Description { get; set; }
 
         public string? ImageUrl { get; set; }
 
-        public string? Brand { get; init; }
+        public string? Brand { get; set; }
 
         [Column(TypeName = "decimal(18,4)")]
-        public decimal Price { get; init; }
+        public decimal Price { get; set; }
 
-        public int Quantity { get; init; }
+        public int Quantity { get; set; }
+
+        public string? Store { get; set; }
     }
 }

@@ -1,0 +1,36 @@
+﻿<div class="result-body">
+    <div class="table-responsive">
+        <table class="table widget-26">
+            <tbody>
+                @if (Stores != null)
+                {
+                    @foreach (var store in Stores)
+                    {
+                        <tr>
+                            <td>
+                                <div class="widget-26-job-title">
+                                    <a href="/store/@store.Id/products">@store.Name</a>
+                                    <p class="m-0 employer-name">@store.OwnedBy</p>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="widget-26-job-info">
+                                    <p class="type m-0">@store.Email</p>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="widget-26-job-salary">@store.PhoneNumber</div>
+                            </td>
+                            <td>
+                                <div class="widget-26-job-salary">@(store.Url == null ? "" : store.Url)</div>
+                            </td>
+                            <td>
+                                <div class="widget-26-job-salary">@(store.FullAddress == null ? "" : store.FullAddress)</div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

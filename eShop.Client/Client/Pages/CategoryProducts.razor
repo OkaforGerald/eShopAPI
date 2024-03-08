@@ -1,0 +1,30 @@
+﻿@page "/categories/{Id}/products"
+
+@using eShop.Client.Client.Components
+@using eShop.Client.Client.Components.ProductTable
+@using Microsoft.AspNetCore.Authorization
+@using SharedAPI.Data_Transfer
+@using SharedAPI.Request_Features
+
+@attribute [Authorize]
+
+<div class="row">
+    <div class="col-md-5">
+        <Search OnSearchChanged="SearchChanged" />
+    </div>
+    <div class="col-md-5">
+        <Sort OnSortChanged="SortChanged" />
+    </div>
+    <div class="col-md-2">
+        <a href="/createProduct">Create Product</a>
+    </div>
+</div>
+<div class="row">
+    <ProductTable Products="ProductList" OnDeleted="DeleteProduct" CategoryId="@Id" />
+</div>
+<div class="row">
+    <div class="col">
+        <Pagination MetaData="MetaData" Spread="2" SelectedPage="SelectedPage" />
+    </div>
+</div>
+

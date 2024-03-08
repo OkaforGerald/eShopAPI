@@ -30,7 +30,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
 });
-builder.Services.AddCors(options => options.AddPolicy("CorsP", builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
+builder.Services.AddCors(options => options.AddPolicy("CorsP", builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("X-Pagination")));
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddScoped<IServiceManager, ServiceManager>();
 builder.Services.AddAuthentication();
@@ -111,10 +111,10 @@ using(var scope = app.Services.CreateScope())
     try
     {
         var dbContext = services.GetRequiredService<RepositoryContext>();
-        if (dbContext.Database.IsSqlServer())
-        {
-            dbContext.Database.Migrate();
-        }
+        //if (dbContext.Database.IsSqlServer())
+        //{
+        //    dbContext.Database.Migrate();
+        //}
     }catch(Exception ex)
     {
         throw;

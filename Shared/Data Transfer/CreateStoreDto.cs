@@ -5,17 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shared.Data_Transfer
+namespace SharedAPI.Data_Transfer
 {
     public record CreateStoreDto
     {
         [Required]
         public string? Name { get; init; }
 
-        [EmailAddress]
-        public string? Email { get; init; }
+        //[EmailAddress]
+        //public string? Email { get; init; }
 
-        public string? PhoneNumber { get; init; }
+        //public string? PhoneNumber { get; init; }
 
         public string? Url { get; init; }
 

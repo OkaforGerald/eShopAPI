@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Entities.Models;
-using Shared.Data_Transfer;
-using Shared.Request_Features;
+using SharedAPI.Data_Transfer;
+using SharedAPI.Request_Features;
 
 namespace Services.Contracts
 {
@@ -15,11 +15,11 @@ namespace Services.Contracts
 
         Task<ProductsDto> GetProductById(Guid StoreId, Guid ProductId, bool trackChanges);
 
-        Task<ProductsDto> CreateProduct(Guid StoreID, string imageUrl, ProductModifyingDto productDto);
+        Task<ProductsDto> CreateProduct(Guid StoreID, string username, string imageUrl, ProductModifyingDto productDto);
 
-        Task DeleteProducts(Guid StoreId, Guid ProductId, bool trackChanges);
+        Task DeleteProducts(Guid StoreId, Guid ProductId, string username, bool trackChanges);
 
-        Task UpdateProduct(Guid StoreId, Guid ProductId, string imageUrl, ProductModifyingDto product);
+        Task UpdateProduct(Guid StoreId, Guid ProductId, string username, string imageUrl, ProductModifyingDto product);
 
         Task<(string text, string recipient)> GenerateWhatsappText(Guid StoreId, Guid ProductId);
 

@@ -7,6 +7,7 @@ using Contracts;
 using Entities.Exceptions;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using SharedAPI.Request_Features;
 
 namespace Repository
 {
@@ -24,16 +25,25 @@ namespace Repository
             Delete(store);
         }
 
-        public async Task<IEnumerable<Store>> GetAllStores(bool trackChanges)
+        public async Task<PagedList<Store>> GetAllStores(StoreParameters parameters, bool trackChanges)
         {
-            return await FindAll(trackChanges)
-                .OrderBy(s => s.Name)
+            var stores = await FindAll(trackChanges)
+                .Where(x => x.Name.Contains(parameters.searchTerm))
+                .OrderBy(s => s.CreatedAt)
                 .ToListAsync();
+
+            return PagedList<Store>.ToPagedList(stores, parameters.PageNumber, parameters.PageSize);
         }
 
         public async Task<Store> GetStoreById(Guid Id, bool trackChanges)
         {
             return await FindByCondition(x => x.Id.Equals(Id), trackChanges)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<Store> GetStoreByOwnerId(string Id, bool trackChanges)
+        {
+            return await FindByCondition(x => x.UserId == Id, trackChanges)
                 .FirstOrDefaultAsync();
         }
     }

@@ -1,0 +1,53 @@
+﻿@page "/cart"
+@if (ShoppingCartItems == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <h3 class="mb-5">Cart</h3>
+    @if(ShoppingCartItems.Count() > 0)
+    {
+      <div class = "row mb-5">
+        <div class ="col-md-9">
+            @foreach(var item in ShoppingCartItems)
+            {
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <img src="@item.Product.ImageUrl" width="300" class="img-thumbnail">
+                    </div>
+                    <div class = "col-md-8">
+                        <h5>@item.Product.Name</h5>
+                        <div class="mb-4">@item.Product.Description</div>
+                        <span>
+                             price: <b>@item.Product.Price.ToString("c")</b>
+                            <input @oninput = "()=>UpdateQty_Input(item.Product.Id)"
+                            type="number" @bind=@item.QuantityInCart />
+                            <button data-itemid="@item.Product.Id" class="btn btn-info btn-sm update-qty">Update Quantity</button>
+                        </span>
+                        <div>
+                            <button  @onclick ="(() => DeleteCartItem_Click(item.Product.Id))"
+                            class="btn btn-danger sm"><i class="fa fa-trash"></i></button>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+        <div class="col-md-3">
+            <h5>Cart Summary</h5>
+            <div class="mt-2">
+                <div>total - (@TotalQuantity items)&nbsp;<b>@TotalPrice</b></div>
+                <a href="checkout" class="btn btn-success">
+                    <span class="oi oi-credit-card"></span>&nbsp; Proceed to checkout 
+                </a>
+            </div>
+        </div>
+        </div>
+    }
+    else
+    {
+        <h4>There are currently no items in your shopping cart</h4>
+    }
+
+}

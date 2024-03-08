@@ -21,6 +21,19 @@ namespace Repository
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<CartItem>()
+                .HasKey(ci => new {ci.CartId, ci.ProductId});
+
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.Cart)
+                .WithMany(c => c.CartItems)
+                .HasForeignKey(c => c.CartId);
+
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.Product)
+                .WithMany(c => c.CartItems)
+                .HasForeignKey(c => c.ProductId);
+
             modelBuilder.ApplyConfiguration(new StoreConfiguration());
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
@@ -32,5 +45,9 @@ namespace Repository
         public DbSet<Product>? Products { get; set; }
 
         public DbSet<Category>? Categories { get; set; }
+
+        public DbSet<Cart>? Carts { get; set; }
+
+        public DbSet<CartItem> CartItems { get; set; }
     }
 }

@@ -14,8 +14,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using Services.Contracts;
-using Shared.Data_Transfer;
-using Shared.Request_Features;
+using SharedAPI.Data_Transfer;
+using SharedAPI.Request_Features;
 
 namespace eShop.Presentation.Controllers
 {
@@ -37,6 +37,14 @@ namespace eShop.Presentation.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProducts(Guid StoreID, [FromQuery] ProductParameters parameters)
         {
+            if (parameters.orderBy is null)
+            {
+                parameters.orderBy = "";
+            }
+            if (parameters.searchTerm is null)
+            {
+                parameters.searchTerm = "";
+            }
             try
             {
                 var result = await serviceManager.products.GetProducts(StoreID, parameters, trackChanges: false);
@@ -75,28 +83,62 @@ namespace eShop.Presentation.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrator")]
+        [Authorize]
         public async Task<IActionResult> CreateProduct(Guid StoreID, [FromForm] ProductModifyingDto product)
         {
-            if(product is null)
+            try
             {
-                return BadRequest(new
+                if (product is null)
                 {
-                    StatusCode = 400,
-                    Message = "Product Creation Object Can Not Be Null"
+                    return BadRequest(new
+                    {
+                        StatusCode = 400,
+                        Message = "Product Creation Object Can Not Be Null"
+                    });
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return UnprocessableEntity(ModelState);
+                }
+
+                var username = HttpContext?.User?.Identity?.Name;
+
+                string imageUrl = await GetImageUrlAsync(StoreID, product.Image);
+
+                var response = await serviceManager.products.CreateProduct(StoreID, username, imageUrl, product);
+
+                return CreatedAtRoute("ProductById", new { StoreID, Id = response.Id }, response);
+            }
+            catch(Exception ex)
+            {
+                return Unauthorized(new
+                {
+                    StatusCode = 401,
+                    Error = ex.Message
                 });
             }
+        }
 
-            if (!ModelState.IsValid)
+        [HttpPost("{Id:Guid}/cart")]
+        [Authorize]
+        public async Task<IActionResult> AddProductToCart(Guid StoreID, Guid Id)
+        {
+            try
             {
-                return UnprocessableEntity(ModelState);
+                var username = HttpContext?.User?.Identity?.Name;
+
+                await serviceManager.cart.AddToCart(StoreID, Id, username);
+
+                return NoContent();
+            }catch(NotFoundException e)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = e.Message,
+                });
             }
-
-            string imageUrl = await GetImageUrlAsync(StoreID, product.Image);
-
-            var response = await serviceManager.products.CreateProduct(StoreID, imageUrl, product);
-
-            return CreatedAtRoute("ProductById", new { StoreID, Id = response.Id }, response);
         }
 
         [HttpGet("{Id:Guid}/order/whatsapp")]
@@ -156,12 +198,14 @@ namespace eShop.Presentation.Controllers
         }
 
         [HttpDelete("{Id:Guid}")]
-        [Authorize(Roles = "Administrator")]
+        [Authorize]
         public async Task<IActionResult> DeleteProduct(Guid StoreID, Guid Id)
         {
             try
             {
-                await serviceManager.products.DeleteProducts(StoreID, Id, false);
+                var username = HttpContext?.User?.Identity?.Name;
+
+                await serviceManager.products.DeleteProducts(StoreID, Id, username, false);
 
                 return NoContent();
             }catch(NotFoundException e)
@@ -171,18 +215,27 @@ namespace eShop.Presentation.Controllers
                     StatusCode = 404,
                     Message = e.Message,
                 });
+            }catch(Exception ex)
+            {
+                return Unauthorized(new
+                {
+                    StatusCode = 401,
+                    Error = ex.Message
+                });
             }
         }
 
         [HttpPut("{Id:Guid}")]
-        [Authorize(Roles = "Administrator")]
+        [Authorize]
         public async Task<IActionResult> UpdateProduct(Guid StoreID, Guid Id, [FromForm] ProductModifyingDto productModifyingDto)
         {
             try
             {
                 string imageUrl = await GetImageUrlAsync(StoreID, productModifyingDto.Image);
 
-                await serviceManager.products.UpdateProduct(StoreID, Id, imageUrl, productModifyingDto);
+                var username = HttpContext?.User?.Identity?.Name;
+
+                await serviceManager.products.UpdateProduct(StoreID, Id, username, imageUrl, productModifyingDto);
 
                 return NoContent();
             }
@@ -192,6 +245,12 @@ namespace eShop.Presentation.Controllers
                 {
                     StatusCode = 404,
                     Message = e.Message,
+                });
+            }catch(Exception ex){
+                return Unauthorized(new
+                {
+                    StatusCode = 401,
+                    Error = ex.Message
                 });
             }
         }

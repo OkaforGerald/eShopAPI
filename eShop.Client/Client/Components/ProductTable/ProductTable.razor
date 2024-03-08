@@ -1,0 +1,27 @@
+﻿﻿@if (Products.Count > 0)
+{
+    @foreach (var product in Products)
+    {
+        <div class="col-md-3 mb-2">
+            <a href="store/@product.StoreId/products/@product.Id.ToString()">
+            <div class="card">
+                <img class="img-thumbnail" src="@product.ImageUrl">
+                <div class=""card-body>
+                    <h5 class=" card - card-subtitle mb-3">
+                        @product.Name
+                    </h5>
+                    <p class="card-text">
+                        <b>@product.Price.ToString("C")</b>
+                    </p>
+                </div>
+            </div>    
+            </a>
+        </div>
+    }
+}
+else
+{
+    <span>
+        Loading products...
+    </span>
+}

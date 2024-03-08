@@ -8,9 +8,10 @@ using AutoMapper;
 using Contracts;
 using Entities.Exceptions;
 using Entities.Models;
+using Microsoft.AspNetCore.Identity;
 using Services.Contracts;
-using Shared.Data_Transfer;
-using Shared.Request_Features;
+using SharedAPI.Data_Transfer;
+using SharedAPI.Request_Features;
 
 namespace Services
 {
@@ -18,33 +19,44 @@ namespace Services
     {
         private readonly IRepositoryManager repositoryManager;
         private readonly IMapper mapper;
+        private readonly UserManager<User> userManager;
 
-        public ProductService(IMapper mapper, IRepositoryManager repositoryManager)
+        public ProductService(IMapper mapper, IRepositoryManager repositoryManager, UserManager<User> userManager)
         {
             this.repositoryManager = repositoryManager;
             this.mapper = mapper;
+            this.userManager = userManager;
         }
 
-        public async Task<ProductsDto> CreateProduct(Guid StoreID, string imageUrl, ProductModifyingDto productDto)
+        public async Task<ProductsDto> CreateProduct(Guid StoreID, string username, string imageUrl, ProductModifyingDto productDto)
         {
-            var product = new Product
+            var user = await userManager.FindByNameAsync(username);
+            var store = await repositoryManager.stores.GetStoreByOwnerId(user.Id, trackChanges: false);
+            if(store.Id  == StoreID)
             {
-                StoreId = StoreID,
-                ImageUrl = imageUrl,
-                Price = productDto.Price,
-                Quantity = productDto.Quantity,
-                Brand = productDto.Brand,
-                Description = productDto.Description,
-                Name = productDto.Name,
-                CategoryId = productDto.CategoryId,
-            };
+                var product = new Product
+                {
+                    StoreId = StoreID,
+                    ImageUrl = imageUrl,
+                    Price = productDto.Price,
+                    Quantity = productDto.Quantity,
+                    Brand = productDto.Brand,
+                    Description = productDto.Description,
+                    Name = productDto.Name,
+                    CategoryId = productDto.CategoryId,
+                };
 
-            repositoryManager.products.CreateProduct(product);
-            await repositoryManager.Save();
+                repositoryManager.products.CreateProduct(product);
+                await repositoryManager.Save();
 
-            var response = mapper.Map<ProductsDto>(product);
+                var response = mapper.Map<ProductsDto>(product);
 
-            return response;
+                return response;
+            }
+            else
+            {
+                throw new Exception("Not authorized to create a product in this store");
+            }
         }
 
         public async Task<ProductsDto> GetProductById(Guid StoreId, Guid ProductId, bool trackChanges)
@@ -64,6 +76,7 @@ namespace Services
             }
 
             var result = mapper.Map<ProductsDto>(product);
+            result.Store = store.Name;
             return result;
         }
 
@@ -79,6 +92,11 @@ namespace Services
             var products = await repositoryManager.products.GetProducts(StoreId, parameters, trackChanges: false);
 
             var result = mapper.Map<IEnumerable<ProductsDto>>(products);
+
+            foreach(var product in result)
+            {
+                product.Store = store.Name;
+            }
 
             return (products: result, metadata: products.Metadata);
 
@@ -117,58 +135,79 @@ namespace Services
             return (products, recipient);
         }
 
-        public async Task DeleteProducts(Guid StoreId, Guid ProductId, bool trackChanges)
+        public async Task DeleteProducts(Guid StoreId, Guid ProductId, string username, bool trackChanges)
         {
-            var store = await repositoryManager.stores.GetStoreById(StoreId, false);
+            var user = await userManager.FindByNameAsync(username);
+            var storeFromUser = await repositoryManager.stores.GetStoreByOwnerId(user.Id, trackChanges: false);
 
-            if(store is null)
+            if ((storeFromUser != null && storeFromUser.Id == StoreId) || await userManager.IsInRoleAsync(user, "Administrator"))
             {
-                throw new StoreNotFoundException(StoreId);
+
+                var store = await repositoryManager.stores.GetStoreById(StoreId, false);
+
+                if (store is null)
+                {
+                    throw new StoreNotFoundException(StoreId);
+                }
+
+                var product = await repositoryManager.products.GetProductById(StoreId, ProductId, false);
+
+                if (product is null)
+                {
+                    throw new StoreNotFoundException(ProductId);
+                }
+
+                var filePath = Directory.GetCurrentDirectory() + "\\wwwroot\\" + product.ImageUrl.Substring(product.ImageUrl.IndexOf('I')).Replace("/", "\\");
+
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
+                repositoryManager.products.DeleteProduct(product);
             }
-
-            var product = await repositoryManager.products.GetProductById(StoreId, ProductId, false);
-
-            if(product is null)
+            else
             {
-                throw new StoreNotFoundException(ProductId);
+                throw new Exception("Not authorized to delete a product in this store");
             }
-
-            var filePath = Directory.GetCurrentDirectory() + "\\wwwroot\\" + product.ImageUrl.Substring(product.ImageUrl.IndexOf('I')).Replace("/","\\");
-            
-            if(File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-
-            repositoryManager.products.DeleteProduct(product);
         }
 
-        public async Task UpdateProduct(Guid StoreId, Guid ProductId, string imageUrl, ProductModifyingDto productDto)
+        public async Task UpdateProduct(Guid StoreId, Guid ProductId, string username, string imageUrl, ProductModifyingDto productDto)
         {
-            var store = await repositoryManager.stores.GetStoreById(StoreId, false);
+            var user = await userManager.FindByNameAsync(username);
+            var storeFromUser = await repositoryManager.stores.GetStoreByOwnerId(user.Id, trackChanges: false);
 
-            if (store is null)
+            if ((storeFromUser != null && storeFromUser.Id == StoreId) || await userManager.IsInRoleAsync(user, "Administrator"))
             {
-                throw new StoreNotFoundException(StoreId);
+                var store = await repositoryManager.stores.GetStoreById(StoreId, false);
+
+                if (store is null)
+                {
+                    throw new StoreNotFoundException(StoreId);
+                }
+
+                var product = await repositoryManager.products.GetProductById(StoreId, ProductId, true);
+
+                if (product is null)
+                {
+                    throw new StoreNotFoundException(ProductId);
+                }
+
+                var filePath = Directory.GetCurrentDirectory() + "\\wwwroot\\" + product.ImageUrl.Substring(product.ImageUrl.IndexOf('I')).Replace("/", "\\");
+
+                if (!product.ImageUrl.Contains(productDto.Image.FileName) && File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
+                mapper.Map(productDto, product);
+                product.ImageUrl = imageUrl;
+                await repositoryManager.Save();
             }
-
-            var product = await repositoryManager.products.GetProductById(StoreId, ProductId, true);
-
-            if (product is null)
+            else
             {
-                throw new StoreNotFoundException(ProductId);
+                throw new Exception("Not authorized to update a product in this store");
             }
-
-            var filePath = Directory.GetCurrentDirectory() + "\\wwwroot\\" + product.ImageUrl.Substring(product.ImageUrl.IndexOf('I')).Replace("/", "\\");
-
-            if (!product.ImageUrl.Contains(productDto.Image.FileName) && File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-
-            mapper.Map(productDto, product);
-            product.ImageUrl = imageUrl;
-            await repositoryManager.Save();
         }
     }
 }
