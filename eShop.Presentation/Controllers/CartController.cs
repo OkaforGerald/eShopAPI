@@ -30,5 +30,22 @@ namespace eShop.Presentation.Controllers
 
             return Ok(response);
         }
+
+        [HttpPost("checkout")]
+        [Authorize]
+        public async Task<IActionResult> CheckoutProductsInCart()
+        {
+            var username = HttpContext?.User?.Identity?.Name;
+
+            try
+            {
+                await serviceManager.cart.CheckoutCart(username);
+
+                return NoContent();
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

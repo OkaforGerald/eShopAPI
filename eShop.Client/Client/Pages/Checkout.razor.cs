@@ -12,7 +12,13 @@ namespace eShop.Client.Client.Pages
 
         protected IEnumerable<CartItemDto> ShoppingCartItems { get; set; }
 
-		protected int TotalQty { get; set; }
+        private string deliveryAddress { get; set; }
+
+		private string newAddress { get; set; }
+
+        protected bool ShowAddressForm { get; set; } = false;
+
+        protected int TotalQty { get; set; }
 
 		protected string PaymentDescription { get; set; }
 
@@ -51,21 +57,29 @@ namespace eShop.Client.Client.Pages
 			}
 		}
 
-		protected override async Task OnAfterRenderAsync(bool firstRender)
+		protected async Task AddAddress()
 		{
-			try
-			{
-				if (firstRender)
-				{
-					await Js.InvokeVoidAsync("initPayPalButton");
-				}
-			}
-			catch (Exception)
-			{
-
-				throw;
-			}
 		}
+
+		protected async Task ProceedToCheckout(Guid cartID)
+		{ }
+
+
+  //      protected override async Task OnAfterRenderAsync(bool firstRender)
+		//{
+		//	try
+		//	{
+		//		if (firstRender)
+		//		{
+		//			await Js.InvokeVoidAsync("initPayPalButton");
+		//		}
+		//	}
+		//	catch (Exception)
+		//	{
+
+		//		throw;
+		//	}
+		//}
 
 	}
 }

@@ -30,5 +30,7 @@ namespace Entities.Models
 
         public ICollection<CartItem>? CartItems { get; set; }
 
+        public ICollection<OrderProducts>? OrderProducts { get; set; }
+
     }
 }

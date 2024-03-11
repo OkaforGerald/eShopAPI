@@ -38,7 +38,6 @@ namespace Repository
         public async Task<List<CartItemDto>> GetProductsInCart(string userId, bool trackChanges)
         {
             return await FindByCondition(x => x.userId.Equals(userId), trackChanges)
-                .Where(c => c.userId == userId)
                 .SelectMany(c => c.CartItems)
                 .Select(ci => new CartItemDto
                 {
@@ -51,7 +50,8 @@ namespace Repository
                         Brand = ci.Product.Brand,
                         Price = ci.Product.Price,
                         Quantity = ci.Product.Quantity,
-                        Store = ci.Product.Store.Name
+                        Store = ci.Product.Store.Name,
+                        StoreId = ci.Product.StoreId
                     },
                     QuantityInCart = ci.QuantityInCart,
                 })

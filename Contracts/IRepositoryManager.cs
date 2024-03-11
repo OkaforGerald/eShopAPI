@@ -18,6 +18,10 @@ namespace Contracts
 
         ICartRepository cart { get; }
 
+        IOrderRepository orders { get; }
+
+        IOrderProductRepository orderProduct { get; }
+
         Task Save();
     }
 }
