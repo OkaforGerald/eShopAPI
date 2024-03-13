@@ -8,7 +8,7 @@ namespace eShop.Client.Client.HttpRepository
     {
         Task<List<CategoryDto>> GetCategories();
 
-        Task<PagingResponse<ProductsDto>> GetProductsByCategory(Guid Id, ProductParameters productParameters);
+        Task<PagingResponse<OrderProducsDto>> GetProductsByCategory(Guid Id, ProductParameters productParameters);
 
 	}
 }

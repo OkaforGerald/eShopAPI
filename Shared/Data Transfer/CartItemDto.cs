@@ -9,7 +9,7 @@ namespace SharedAPI.Data_Transfer
 {
     public class CartItemDto
     {
-        public ProductsDto Product { get; set; }
+        public OrderProducsDto Product { get; set; }
 
         public int QuantityInCart { get; set; }
     }

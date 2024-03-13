@@ -10,20 +10,20 @@ namespace SharedAPI.Data_Transfer
     public record CreateStoreDto
     {
         [Required]
-        public string? Name { get; init; }
+        public string? Name { get; set; }
 
         //[EmailAddress]
         //public string? Email { get; init; }
 
         //public string? PhoneNumber { get; init; }
 
-        public string? Url { get; init; }
+        public string? Url { get; set; }
 
         [Required]
-        public string? Address { get; init; }
+        public string? Address { get; set; }
 
         [Required]
-        public string? Country { get; init; }
+        public string? Country { get; set; }
     }
 
 }

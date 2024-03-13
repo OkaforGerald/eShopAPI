@@ -93,13 +93,15 @@ namespace Services
             return response;
         }
 
-        public async Task<(IEnumerable<StoresDto> stores, Metadata metadata)> GetStores(StoreParameters parameters, bool trackChanges)
+        public async Task<(List<StoresDto> stores, Metadata metadata)> GetStores(StoreParameters parameters, string username, bool trackChanges)
         {
             //Get Store Owners with stores
-
+            var user = await userManager.FindByNameAsync(username);
+            var store = await manager.stores.GetStoreByOwnerId(user.Id, trackChanges);
             var results = await manager.stores.GetAllStores(parameters, trackChanges);
 
-            var response = mapper.Map<IEnumerable<StoresDto>>(results);
+            var response = mapper.Map<List<StoresDto>>(results);
+            response[0].storeOwner = store is not null;
 
             return (stores: response, results.Metadata);
         }

@@ -8,7 +8,7 @@ namespace eShop.Client.Client.Pages
 {
     public partial class CategoryProducts
     {
-        public List<ProductsDto> ProductList { get; set; } = new List<ProductsDto>();
+        public List<OrderProducsDto> ProductList { get; set; } = new List<OrderProducsDto>();
         public Metadata MetaData { get; set; } = new Metadata();
 
         private ProductParameters _productParameters = new ProductParameters();

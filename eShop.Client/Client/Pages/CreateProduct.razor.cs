@@ -8,17 +8,33 @@ namespace eShop.Client.Client.Pages
     public partial class CreateProduct
     {
         private ProductModifyingDto _product = new ProductModifyingDto();
+        private List<CategoryDto> categories = new List<CategoryDto>();
         private SuccessNotification _notification = null!;
+
+        [Parameter]
+        public string Id { get; set; }
 
         [Inject]
         public IProductHttpRepository ProductRepo { get; set; }
 
+        [Inject]
+        public ICategoryRepository CategoryRepo { get; set; }
+
+        [Inject]
+        public NavigationManager navigationManager { get; set; }
+
+        protected override async Task OnInitializedAsync()
+        {
+            categories = await CategoryRepo.GetCategories();
+        }
+
         private async Task Create()
         {
-            await ProductRepo.CreateProduct(_product);
+            await ProductRepo.CreateProduct(_product, Id);
+            navigationManager.NavigateTo($"store/{Id}/products");
             _notification.Show();
         }
 
-        private void AssignImageUrl(string imgUrl) => new ProductsDto().ImageUrl = imgUrl;
+        private void AssignImageUrl(string imgUrl) => _product.ImageUrl = imgUrl;
     }
 }

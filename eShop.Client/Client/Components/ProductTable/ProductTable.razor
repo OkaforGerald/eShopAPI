@@ -1,4 +1,4 @@
-﻿﻿@if (Products.Count > 0)
+﻿﻿@if (Products.Count > 1)
 {
     @foreach (var product in Products)
     {
@@ -18,10 +18,13 @@
             </a>
         </div>
     }
+}else if(Products.Count == 1)
+{
+    <h3>The store has no products</h3>
 }
 else
 {
     <span>
-        Loading products...
+        Loading...
     </span>
 }

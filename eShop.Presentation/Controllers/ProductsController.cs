@@ -35,6 +35,7 @@ namespace eShop.Presentation.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetProducts(Guid StoreID, [FromQuery] ProductParameters parameters)
         {
             if (parameters.orderBy is null)
@@ -47,7 +48,8 @@ namespace eShop.Presentation.Controllers
             }
             try
             {
-                var result = await serviceManager.products.GetProducts(StoreID, parameters, trackChanges: false);
+                var username = HttpContext.User.Identity.Name;
+                var result = await serviceManager.products.GetProducts(StoreID, username, parameters, trackChanges: false);
 
                 Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(result.metadata));
 
@@ -84,7 +86,7 @@ namespace eShop.Presentation.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateProduct(Guid StoreID, [FromForm] ProductModifyingDto product)
+        public async Task<IActionResult> CreateProduct(Guid StoreID, [FromBody] ProductModifyingDto product)
         {
             try
             {
@@ -104,9 +106,9 @@ namespace eShop.Presentation.Controllers
 
                 var username = HttpContext?.User?.Identity?.Name;
 
-                string imageUrl = await GetImageUrlAsync(StoreID, product.Image);
+                //string imageUrl = await GetImageUrlAsync(StoreID, product.Image);
 
-                var response = await serviceManager.products.CreateProduct(StoreID, username, imageUrl, product);
+                var response = await serviceManager.products.CreateProduct(StoreID, username, product.ImageUrl, product);
 
                 return CreatedAtRoute("ProductById", new { StoreID, Id = response.Id }, response);
             }
@@ -231,11 +233,11 @@ namespace eShop.Presentation.Controllers
         {
             try
             {
-                string imageUrl = await GetImageUrlAsync(StoreID, productModifyingDto.Image);
+                //string imageUrl = await GetImageUrlAsync(StoreID, productModifyingDto.I);
 
                 var username = HttpContext?.User?.Identity?.Name;
 
-                await serviceManager.products.UpdateProduct(StoreID, Id, username, imageUrl, productModifyingDto);
+                await serviceManager.products.UpdateProduct(StoreID, Id, username, productModifyingDto.ImageUrl, productModifyingDto);
 
                 return NoContent();
             }

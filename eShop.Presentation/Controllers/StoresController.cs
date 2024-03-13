@@ -25,6 +25,7 @@ namespace eShop.Presentation.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetStores([FromQuery] StoreParameters parameters)
         {
            if(parameters.orderBy is null)
@@ -35,8 +36,8 @@ namespace eShop.Presentation.Controllers
             {
                 parameters.searchTerm = "";
             }
-
-            var response = await serviceManager.stores.GetStores(parameters, trackChanges: false);
+            var username = HttpContext.User.Identity.Name;
+            var response = await serviceManager.stores.GetStores(parameters, username, trackChanges: false);
 
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(response.metadata));
 

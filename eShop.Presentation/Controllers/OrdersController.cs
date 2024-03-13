@@ -41,12 +41,9 @@ namespace eShop.Presentation.Controllers
                 return Ok(orders);
             }
 
-        [HttpGet("{Id:Guid}/invoice")]
-        [Authorize]
-        public async Task<IActionResult> DownloadInvoice(Guid Id)
+        [HttpGet("{Id:Guid}/invoice/{username}")]
+        public async Task<IActionResult> DownloadInvoice(Guid Id, string username)
         {
-            var username = HttpContext?.User?.Identity?.Name;
-
             var order = await serviceManager.cart.GetUserOrderById(username, Id);
 
             if(order != null)

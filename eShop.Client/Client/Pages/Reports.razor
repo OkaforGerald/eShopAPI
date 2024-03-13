@@ -1,0 +1,14 @@
+﻿@page "/reports"
+@using Microsoft.AspNetCore.Authorization;
+@using SharedAPI.Data_Transfer
+@using SharedAPI.Request_Features
+@using eShop.Client.Client.AuthProviders;
+@using eShop.Client.Client.Components.OrderTable
+
+@attribute [Authorize]
+
+<h3>Orders</h3>
+<div class="row">
+    <OrderTable Orders="OrderList"/> 
+</div>
+

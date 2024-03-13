@@ -84,7 +84,7 @@ namespace eShop.Client.Client.Pages
             await Js.InvokeVoidAsync("MakeUpdateQtyButtonVisible", id, visible);
         }
 
-        private void UpdateItemTotalPrice(ProductsDto cartItemDto)
+        private void UpdateItemTotalPrice(OrderProducsDto cartItemDto)
         {
             var item = GetCartItem(cartItemDto.Id);
 

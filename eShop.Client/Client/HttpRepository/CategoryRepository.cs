@@ -32,7 +32,7 @@ namespace eShop.Client.Client.HttpRepository
             return categories;
         }
 
-        public async Task<PagingResponse<ProductsDto>> GetProductsByCategory(Guid Id, ProductParameters productParameters)
+        public async Task<PagingResponse<OrderProducsDto>> GetProductsByCategory(Guid Id, ProductParameters productParameters)
         {
 			var queryStringParam = new Dictionary<string, string>
 			{
@@ -46,9 +46,9 @@ namespace eShop.Client.Client.HttpRepository
 			{
 				throw new ApplicationException(content);
 			}
-			var pagingResponse = new PagingResponse<ProductsDto>
+			var pagingResponse = new PagingResponse<OrderProducsDto>
 			{
-				Items = JsonSerializer.Deserialize<List<ProductsDto>>(content, _options)!,
+				Items = JsonSerializer.Deserialize<List<OrderProducsDto>>(content, _options)!,
 				MetaData = JsonSerializer.Deserialize<Metadata>(response.Headers.GetValues("X-Pagination").First(), _options)!
 			};
 

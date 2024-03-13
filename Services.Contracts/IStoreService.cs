@@ -10,7 +10,7 @@ namespace Services.Contracts
 {
     public interface IStoreService
     {
-        Task<(IEnumerable<StoresDto> stores, Metadata metadata)> GetStores(StoreParameters parameters, bool trackChanges);
+        Task<(List<StoresDto> stores, Metadata metadata)> GetStores(StoreParameters parameters, string username, bool trackChanges);
 
         Task<StoresDto> GetStoreById(Guid id, string requester,  bool trackChanges);
 

@@ -133,6 +133,8 @@ namespace Services
                     repositoryManager.orders.CreateOrder(Order);
 
                     foreach (var products in matchedProducts) {
+                        var prod = await repositoryManager.products.GetProductById(products.Product.StoreId, products.Product.Id, true);
+                        prod.Quantity--;
                         var OrderProduct = new OrderProducts
                         {
                             OrderId = Order.Id,

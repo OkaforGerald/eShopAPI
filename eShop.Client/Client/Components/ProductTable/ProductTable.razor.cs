@@ -7,7 +7,7 @@ namespace eShop.Client.Client.Components.ProductTable
     public partial class ProductTable
     {
         [Parameter]
-        public List<ProductsDto> Products { get; set; } = new List<ProductsDto>();
+        public List<OrderProducsDto> Products { get; set; } = new List<OrderProducsDto>();
 
         [Parameter]
         public EventCallback<Guid> OnDeleted { get; set; }

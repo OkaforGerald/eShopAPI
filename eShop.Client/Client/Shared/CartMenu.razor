@@ -1,11 +1,18 @@
-﻿@using eShop.Client.Client.HttpRepository;
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using eShop.Client.Client.HttpRepository;
 @inject IShoppingCartService ShoppingCartService
 @implements IDisposable
 
-<a href="cart" class="btn btn-info">
-    <i class="oi oi-cart"></i>&nbsp;Cart
+<CascadingAuthenticationState>
+<AuthorizeView>
+    <Authorized>
+<a href="cart" class="btn btn-info" style="background-color:blue;">
+    <i class="oi oi-cart" style="color:white;"></i>&nbsp;<span style="color:white;">Cart</span>
     <span class="badge bg-dark">@shoppingCartItemCount</span>
 </a>
+        </Authorized>
+    </AuthorizeView>
+</CascadingAuthenticationState>
 
 @code {
     private int shoppingCartItemCount = 0;

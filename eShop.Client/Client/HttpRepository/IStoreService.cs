@@ -7,5 +7,7 @@ namespace eShop.Client.Client.HttpRepository
     public interface IStoreService
     {
         Task<PagingResponse<StoresDto>> GetStores(StoreParameters storeParameters);
+
+        Task CreateStore(CreateStoreDto product);
     }
 }

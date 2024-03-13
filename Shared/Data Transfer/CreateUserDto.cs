@@ -11,25 +11,25 @@ namespace SharedAPI.Data_Transfer
     public record CreateUserDto
     {
         [Required(ErrorMessage ="First Name Required")]
-        public string? FirstName { get; init; }
+        public string? FirstName { get; set; }
 
         [Required(ErrorMessage = "Last Name Required")]
-        public string? LastName { get; init; }
+        public string? LastName { get; set; }
 
         [EmailAddress(ErrorMessage ="Please Provide a Valid Email Address")]
         [Required]
-        public string? Email { get; init; }
+        public string? Email { get; set; }
 
-        public string? PhoneNumber { get; init; }
+        public string? PhoneNumber { get; set; }
 
         [Required]
-        public string? Password { get; init; }
+        public string? Password { get; set; }
 
         [NotMapped]
         [Compare("Password", ErrorMessage ="Passwords don't match")]
-        public string? ConfirmPassword { get; init; }
+        public string? ConfirmPassword { get; set; }
 
-        public ICollection<string>? Roles { get; init; } = new List<string>()
+        public ICollection<string>? Roles { get; set; } = new List<string>()
         {
             "User"
         };

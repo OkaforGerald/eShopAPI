@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SharedAPI.Data_Transfer
 {
-    public record ProductsDto
+    public record OrderProducsDto
     {
         public Guid Id { get; set; }
 
@@ -27,5 +27,7 @@ namespace SharedAPI.Data_Transfer
         public int Quantity { get; set; }
 
         public string? Store { get; set; }
+
+        public bool canAct { get; set; }
     }
 }

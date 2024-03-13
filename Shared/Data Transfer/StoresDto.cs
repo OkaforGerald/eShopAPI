@@ -23,5 +23,7 @@ namespace SharedAPI.Data_Transfer
         public string? OwnedBy { get; init; }
 
         public bool requestedByOwner { get; set; } = false;
+
+        public bool storeOwner { get; set; }
     }
 }

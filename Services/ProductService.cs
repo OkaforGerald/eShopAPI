@@ -28,7 +28,7 @@ namespace Services
             this.userManager = userManager;
         }
 
-        public async Task<ProductsDto> CreateProduct(Guid StoreID, string username, string imageUrl, ProductModifyingDto productDto)
+        public async Task<OrderProducsDto> CreateProduct(Guid StoreID, string username, string imageUrl, ProductModifyingDto productDto)
         {
             var user = await userManager.FindByNameAsync(username);
             var store = await repositoryManager.stores.GetStoreByOwnerId(user.Id, trackChanges: false);
@@ -49,7 +49,7 @@ namespace Services
                 repositoryManager.products.CreateProduct(product);
                 await repositoryManager.Save();
 
-                var response = mapper.Map<ProductsDto>(product);
+                var response = mapper.Map<OrderProducsDto>(product);
 
                 return response;
             }
@@ -59,7 +59,7 @@ namespace Services
             }
         }
 
-        public async Task<ProductsDto> GetProductById(Guid StoreId, Guid ProductId, bool trackChanges)
+        public async Task<OrderProducsDto> GetProductById(Guid StoreId, Guid ProductId, bool trackChanges)
         {
             var store = await repositoryManager.stores.GetStoreById(StoreId, trackChanges);
 
@@ -75,26 +75,47 @@ namespace Services
                 throw new ProductNotFoundException(ProductId);
             }
 
-            var result = mapper.Map<ProductsDto>(product);
+            var result = mapper.Map<OrderProducsDto>(product);
             result.Store = store.Name;
             return result;
         }
 
-        public async Task<(IEnumerable<ProductsDto> products, Metadata metadata)> GetProducts(Guid StoreId, ProductParameters parameters, bool trackChanges)
+        public async Task<(IEnumerable<OrderProducsDto> products, Metadata metadata)> GetProducts(Guid StoreId, string username, ProductParameters parameters, bool trackChanges)
         {
             var store = await repositoryManager.stores.GetStoreById(StoreId, trackChanges: false);
+            var user = await userManager.FindByNameAsync(username);
+            bool canAct;
 
-            if(store is null)
+            if (store is null)
             {
                 throw new StoreNotFoundException(StoreId);
             }
 
+            var userStore = await repositoryManager.stores.GetStoreByOwnerId(user.Id, false);
+
+            if (userStore != null)
+            {
+                canAct = userStore.Id.Equals(store.Id);
+            }
+            else
+            {
+                canAct = false;
+            }
+
             var products = await repositoryManager.products.GetProducts(StoreId, parameters, trackChanges: false);
 
-            var result = mapper.Map<IEnumerable<ProductsDto>>(products);
+            if (!products.Any())
+            {
+                var response = new OrderProducsDto();
+                response.canAct = canAct;
+                return (products: new List<OrderProducsDto> { response }, metadata: products.Metadata);
+            }
+
+            var result = mapper.Map<IEnumerable<OrderProducsDto>>(products);
 
             foreach(var product in result)
             {
+                product.canAct = canAct;
                 product.Store = store.Name;
             }
 
@@ -195,10 +216,10 @@ namespace Services
 
                 var filePath = Directory.GetCurrentDirectory() + "\\wwwroot\\" + product.ImageUrl.Substring(product.ImageUrl.IndexOf('I')).Replace("/", "\\");
 
-                if (!product.ImageUrl.Contains(productDto.Image.FileName) && File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
+                //if (!product.ImageUrl.Contains(productDto.Image.FileName) && File.Exists(filePath))
+                //{
+                //    File.Delete(filePath);
+                //}
 
                 mapper.Map(productDto, product);
                 product.ImageUrl = imageUrl;

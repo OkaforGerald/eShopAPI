@@ -70,7 +70,7 @@ namespace Services
             return response;
         }
 
-        public async Task<(IEnumerable<ProductsDto> products, Metadata metadata)> GetProducts(Guid CategoryId, ProductParameters parameters, bool trackChanges)
+        public async Task<(IEnumerable<OrderProducsDto> products, Metadata metadata)> GetProducts(Guid CategoryId, ProductParameters parameters, bool trackChanges)
         {
             var category = await repositoryManager.category.GetCategoryById(CategoryId, trackChanges: false);
 
@@ -81,7 +81,7 @@ namespace Services
 
             var products = await repositoryManager.products.GetProductsByCategory(CategoryId, parameters, trackChanges: false);
 
-            var result = mapper.Map<IEnumerable<ProductsDto>>(products);
+            var result = mapper.Map<IEnumerable<OrderProducsDto>>(products);
 
             return (products: result, metadata: products.Metadata);
         }

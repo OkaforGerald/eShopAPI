@@ -7,7 +7,7 @@ namespace eShop.Client.Client.Pages
 {
     public partial class ProductDetails
     {
-        private ProductsDto _product = new ProductsDto();
+        private OrderProducsDto _product = new OrderProducsDto();
 
         [Parameter]
         public string StoreID { get; set; }

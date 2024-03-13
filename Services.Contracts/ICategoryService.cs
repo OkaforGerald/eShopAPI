@@ -20,6 +20,6 @@ namespace Services.Contracts
 
         Task<CategoryDto> CreateCategory(CreateCategoryDto category);
 
-        Task<(IEnumerable<ProductsDto> products, Metadata metadata)> GetProducts(Guid CategoryId, ProductParameters parameters, bool trackChanges);
+        Task<(IEnumerable<OrderProducsDto> products, Metadata metadata)> GetProducts(Guid CategoryId, ProductParameters parameters, bool trackChanges);
     }
 }

@@ -1,0 +1,49 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+<CascadingAuthenticationState>
+<AuthorizeView>
+    <Authorized>
+<div class="result-body">
+    <div class="table-responsive">
+        <table class="table widget-26">
+            <tbody>
+                @if (Orders != null)
+                {
+                    @foreach (var order in Orders)
+                    {
+                        <tr>
+                            <td>
+                                <div class="widget-26-job-title">
+                                    <p>@order.Id</p>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="widget-26-job-info">
+                                    <p class="type m-0">@order.Buyer</p>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="widget-26-job-salary">@order.OrderSummary</div>
+                            </td>
+                                        <td>
+                                            <div class="widget-26-job-salary">@order.Price.ToString("C")</div>
+                                        </td>
+                            <td>
+                                <div class="widget-26-job-salary">@order.OrderDate.ToShortDateString()</div>
+                            </td>
+                            <td>
+                                @if (order.Buyer.Equals(context.User.Identity.Name))
+                                {
+                                    var link = $@"https://localhost:44314/api/orders/{order.Id}/invoice/{order.Buyer}";
+                                                <a href="@link"><span class="oi oi-data-transfer-download" aria-hidden="true"></span></a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+        </Authorized>
+    </AuthorizeView>
+</CascadingAuthenticationState>

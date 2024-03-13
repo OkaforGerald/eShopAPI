@@ -33,6 +33,7 @@ namespace Repository
             return await FindByCondition(x => x.StoreId == StoreId, trackChanges)
                 .Include(x => x.OrderProducts)
                 .ThenInclude(x => x.Product)
+                .OrderByDescending(x => x.CreatedAt)
                 .ToListAsync();
         }
 
@@ -41,6 +42,7 @@ namespace Repository
             return await FindByCondition(x => x.Buyer == username, trackChanges)
                 .Include(x => x.OrderProducts)
                 .ThenInclude(x => x.Product)
+                .OrderByDescending (x => x.CreatedAt)
                 .ToListAsync();
         }
     }

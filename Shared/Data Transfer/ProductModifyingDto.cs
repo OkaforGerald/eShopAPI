@@ -30,6 +30,6 @@ namespace SharedAPI.Data_Transfer
         public Guid CategoryId { get; set; }
 
         [Required(ErrorMessage = "Image Required")]
-        public IFormFile? Image { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }

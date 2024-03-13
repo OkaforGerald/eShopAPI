@@ -7,7 +7,7 @@ namespace eShop.Client.Client.Pages
 {
     public partial class UpdateProduct
     {
-        private ProductsDto _product;
+        private OrderProducsDto _product;
         private SuccessNotification _notification;
 
         [Inject]

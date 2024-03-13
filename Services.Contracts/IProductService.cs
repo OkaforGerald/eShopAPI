@@ -11,11 +11,11 @@ namespace Services.Contracts
 {
     public interface IProductService
     {
-        Task<(IEnumerable<ProductsDto> products, Metadata metadata)> GetProducts(Guid StoreId, ProductParameters parameters, bool trackChanges);
+        Task<(IEnumerable<OrderProducsDto> products, Metadata metadata)> GetProducts(Guid StoreId, string username, ProductParameters parameters, bool trackChanges);
 
-        Task<ProductsDto> GetProductById(Guid StoreId, Guid ProductId, bool trackChanges);
+        Task<OrderProducsDto> GetProductById(Guid StoreId, Guid ProductId, bool trackChanges);
 
-        Task<ProductsDto> CreateProduct(Guid StoreID, string username, string imageUrl, ProductModifyingDto productDto);
+        Task<OrderProducsDto> CreateProduct(Guid StoreID, string username, string imageUrl, ProductModifyingDto productDto);
 
         Task DeleteProducts(Guid StoreId, Guid ProductId, string username, bool trackChanges);
 

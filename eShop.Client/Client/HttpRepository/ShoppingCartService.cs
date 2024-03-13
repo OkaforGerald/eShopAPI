@@ -37,6 +37,25 @@ namespace eShop.Client.Client.HttpRepository
             return cartItems;
         }
 
+        public async Task<List<OrderProductDto>> GetOrders()
+        {
+            var token = await _localStorage.GetItemAsync<string>("authToken");
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+
+            var response = await _client.GetAsync("orders");
+            var content = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ApplicationException(content);
+            }
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return Enumerable.Empty<OrderProductDto>().ToList();
+            }
+            var orders = JsonSerializer.Deserialize<List<OrderProductDto>>(content, _options);
+            return orders;
+        }
+
         public async Task AddtoCart(Guid StoreId, string productId)
         {
             var response = await _client.PostAsync($"stores/{StoreId}/products/{productId}/cart", null);
@@ -55,9 +74,9 @@ namespace eShop.Client.Client.HttpRepository
             }
         }
 
-        public async Task<ProductsDto> DeleteItem(Guid id)
+        public async Task<OrderProducsDto> DeleteItem(Guid id)
         {
-            return new ProductsDto();
+            return new OrderProducsDto();
         }
     }
 }

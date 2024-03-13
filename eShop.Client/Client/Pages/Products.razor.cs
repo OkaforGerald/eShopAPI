@@ -7,7 +7,7 @@ namespace eShop.Client.Client.Pages
 {
     public partial class Products
     {
-        public List<ProductsDto> ProductList { get; set; } = new List<ProductsDto>();
+        public List<OrderProducsDto> ProductList { get; set; } = new List<OrderProducsDto>();
         public Metadata MetaData { get; set; } = new Metadata();
 
         private ProductParameters _productParameters = new ProductParameters();
@@ -32,8 +32,11 @@ namespace eShop.Client.Client.Pages
         private async Task GetProducts()
         {
             var pagingResponse = await ProductRepo.GetProducts(new Guid(StoreID), _productParameters);
-            ProductList = pagingResponse.Items;
-            MetaData = pagingResponse.MetaData;
+            if (pagingResponse != null)
+            {
+                ProductList = pagingResponse.Items;
+                MetaData = pagingResponse.MetaData;
+            }
         }
 
         private async Task SearchChanged(string searchTerm)

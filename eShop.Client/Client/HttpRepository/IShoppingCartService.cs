@@ -6,9 +6,11 @@ namespace eShop.Client.Client.HttpRepository
     {
         Task<List<CartItemDto>> GetCart();
 
-        Task<ProductsDto> DeleteItem(Guid id);
+        Task<OrderProducsDto> DeleteItem(Guid id);
 
         Task AddtoCart(Guid StoreId, string productId);
+
+        Task<List<OrderProductDto>> GetOrders();
 
         event Action<int> OnShoppingCartChanged;
         void RaiseEventOnShoppingCartChanged(int totalQty);

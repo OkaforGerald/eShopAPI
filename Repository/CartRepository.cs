@@ -41,7 +41,7 @@ namespace Repository
                 .SelectMany(c => c.CartItems)
                 .Select(ci => new CartItemDto
                 {
-                    Product = new ProductsDto
+                    Product = new OrderProducsDto
                     {
                         Id = ci.Product.Id,
                         Name = ci.Product.Name,
