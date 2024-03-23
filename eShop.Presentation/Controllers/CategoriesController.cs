@@ -25,6 +25,10 @@ namespace eShop.Presentation.Controllers
             this.serviceManager = serviceManager;
         }
 
+        /// <summary>
+        /// Gets a list of all categories.
+        /// </summary>
+        /// <returns>A list of categories.</returns>
         [HttpGet]
         public async Task<IActionResult> GetCategories()
         {

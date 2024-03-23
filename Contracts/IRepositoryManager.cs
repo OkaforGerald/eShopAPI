@@ -22,6 +22,8 @@ namespace Contracts
 
         IOrderProductRepository orderProduct { get; }
 
+        IRatingRepository rating { get; }
+
         Task Save();
     }
 }

@@ -18,6 +18,10 @@ namespace eShop.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Gets a list of all products.
+        /// </summary>
+        /// <returns>A list of products.</returns>
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {

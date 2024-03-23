@@ -24,6 +24,10 @@ namespace eShop.Presentation.Controllers
             this.serviceManager = serviceManager;
         }
 
+        /// <summary>
+        /// Gets a list of all stores.
+        /// </summary>
+        /// <returns>A list of stores.</returns>
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetStores([FromQuery] StoreParameters parameters)
@@ -102,6 +106,9 @@ namespace eShop.Presentation.Controllers
             
         }
 
+        /// <summary>
+        /// Delete a store that belongs to the logged in user.
+        /// </summary>
         [HttpDelete("{Id:Guid}")]
         [Authorize]
         public async Task<IActionResult> DeleteStore(Guid Id)
@@ -137,7 +144,7 @@ namespace eShop.Presentation.Controllers
         }
 
         [HttpPut("{Id:Guid}")]
-        [Authorize(Roles ="Administrator")]
+        [Authorize]
         public async Task<IActionResult> UpdateStore(Guid Id, [FromBody]StoreUpdateDto updateModel)
         {
             try

@@ -1,4 +1,5 @@
-﻿﻿@if (Products.Count > 1)
+﻿@using System.Globalization;
+﻿@if (Products.Count > 1)
 {
     @foreach (var product in Products)
     {
@@ -10,15 +11,61 @@
                     <h5 class=" card - card-subtitle mb-3">
                         @product.Name
                     </h5>
-                    <p class="card-text">
-                        <b>@product.Price.ToString("C")</b>
-                    </p>
+                        <p class="card-text">
+                            <b>@product.Price.ToString("C", new CultureInfo("HA-LATN-NG"))</b>
+                        </p>
+                        @if (canAct)
+                        {
+                            <button @onclick="(() => Delete(product.Id))"
+                                    class="btn btn-danger sm"
+                                    style="float:right;">
+                                <i class="oi oi-trash"></i>
+                            </button>
+
+                            <button @onclick="(() => Delete(product.Id))"
+                                    class="btn btn-primary sm"
+                                    style="float:right;">
+                                <i class="oi oi-pencil"></i>
+                            </button>
+                        }
                 </div>
             </div>    
             </a>
         </div>
     }
-}else if(Products.Count == 1)
+}else if(Products.Count ==1 && Products[0].Name != null)
+{
+        <div class="col-md-3 mb-2">
+            <a href="store/@Products[0].StoreId/products/@Products[0].Id.ToString()">
+                <div class="card">
+                    <img class="img-thumbnail" src="@Products[0].ImageUrl">
+                    <div class="" card-body>
+                        <h5 class=" card - card-subtitle mb-3">
+                            @Products[0].Name
+                        </h5>
+                        <p class="card-text">
+                            <b>@Products[0].Price.ToString("C", new CultureInfo("HA-LATN-NG"))</b>
+                        </p>
+                        @if (canAct)
+                        {
+                            <button @onclick="(() => Delete(Products[0].Id))"
+                                    class="btn btn-danger sm"
+                                    style="float:right;">
+                                <i class="oi oi-trash"></i>
+                            </button>
+
+                            <button @onclick="(() => Delete(Products[0].Id))"
+                                    class="btn btn-primary sm"
+                                    style="float:right;">
+                                <i class="oi oi-pencil"></i>
+                            </button>
+                        }
+                    </div>
+                </div>
+            </a>
+        </div>
+
+}else if(Products.Count == 1 && Products[0].Name is null)
 {
     <h3>The store has no products</h3>
 }

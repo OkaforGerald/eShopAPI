@@ -20,7 +20,7 @@ namespace SharedAPI.Data_Transfer
 
         public string? FullAddress { get; init; }
 
-        public string? OwnedBy { get; init; }
+        public string? OwnedBy { get; set; }
 
         public bool requestedByOwner { get; set; } = false;
 

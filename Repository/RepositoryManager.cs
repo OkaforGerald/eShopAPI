@@ -17,6 +17,7 @@ namespace Repository
         private readonly Lazy<ICartRepository> cartRepository;
         private readonly Lazy<IOrderRepository> orderRepository;
         private readonly Lazy<IOrderProductRepository> orderProductRepository;
+        private readonly Lazy<IRatingRepository> ratingRepository;
 
         public RepositoryManager(RepositoryContext repositoryContext)
         {
@@ -28,6 +29,7 @@ namespace Repository
             cartRepository = new Lazy<ICartRepository>(new CartRepository(repositoryContext));
             orderRepository = new Lazy<IOrderRepository>(new OrderRepository(repositoryContext));
             orderProductRepository = new Lazy<IOrderProductRepository>(new OrderProductRepository(repositoryContext));
+            ratingRepository = new Lazy<IRatingRepository>(new RatingRepository(repositoryContext));
         }
 
         public async Task Save()
@@ -48,5 +50,7 @@ namespace Repository
         public IOrderRepository orders => orderRepository.Value;
 
         public IOrderProductRepository orderProduct => orderProductRepository.Value;
+
+        public IRatingRepository rating => ratingRepository.Value;
     }
 }

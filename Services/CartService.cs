@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -169,7 +170,7 @@ namespace Services
             {
                 Id = o.Id,
                 Buyer = o.Buyer,
-                OrderSummary = o.OrderProducts.Select(op => $"{op.Product.Name} x {op.QuantityOrdered}").Aggregate((a, b) => $"{a}, {b}"),
+                OrderSummary = o.OrderProducts.Select(op => $"{op.Product.Name} x {op.QuantityOrdered} x {op.Product.Price}").Aggregate((a, b) => $"{a}, {b}"),
                 OrderDate = o.CreatedAt,
                 Price = o.OrderPrice
             }).ToList();
@@ -193,14 +194,18 @@ namespace Services
             var userOrders = orders.Concat(receivedOrders).ToList();
 
             var matchedOrder = userOrders.Where(x => x.Id == Id).FirstOrDefault();
-
             if (matchedOrder != null)
             {
+                var buyer = await userManager.FindByEmailAsync(matchedOrder.Buyer);
                 var orderProductDtos = new OrderProductDto
                 {
                     Id = matchedOrder.Id,
-                    Buyer = matchedOrder.Buyer,
-                    OrderSummary = matchedOrder.OrderProducts.Select(op => $"{op.Product.Name} x {op.QuantityOrdered}").Aggregate((a, b) => $"{a}, {b}"),
+                    SellerName = store.Name,
+                    SellerLocation = store.Address,
+                    SellerPhone = store.PhoneNumber,
+                    Buyer = $"{buyer.FirstName} {buyer.LastName}",
+                    BuyerNumber = buyer.PhoneNumber,
+                    OrderSummary = matchedOrder.OrderProducts.Select(op => $"{op.Product.Name} x {op.QuantityOrdered} x {op.Product.Price}").Aggregate((a, b) => $"{a}, {b}"),
                     OrderDate = matchedOrder.CreatedAt,
                     Price = matchedOrder.OrderPrice
                 };
@@ -212,5 +217,10 @@ namespace Services
                 return null;
             }
         }
+
+        //public async Task<CartItem> UpdateQty(int id, CartItemQtyUpdateDto cartItemQtyUpdateDto)
+        //{
+        //    var item = await repositoryManager.cart.GetCartForUser()
+        //}
     }
 }

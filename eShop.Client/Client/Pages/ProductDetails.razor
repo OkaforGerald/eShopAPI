@@ -1,4 +1,5 @@
 ﻿@page "/store/{StoreID}/products/{Id}"
+@using System.Globalization;
 
 @if (_product == null)
 {
@@ -17,7 +18,7 @@ else
             <p style="color:gold"><span class="oi oi-home" aria-hidden="true"/>@_product.Store</p>
             <p class="mb-4">
                 <b>
-                    @_product.Price.ToString("C")&nbsp;(@_product.Quantity items in stock)
+                    @_product.Price.ToString("C", new CultureInfo("HA-LATN-NG"))&nbsp;(@_product.Quantity items in stock)
                 </b>
             </p>
             <div>

@@ -19,6 +19,7 @@ namespace Services
         private readonly Lazy<IAuthService> _authService;
         private readonly Lazy<ICategoryService> _categoryService;
         private readonly Lazy<ICartService> _cartService;
+        private readonly Lazy<IRatingService> _ratingService;
 
         public ServiceManager(IMapper mapper, IRepositoryManager repositoryManager, UserManager<User> userManager,IConfiguration configuration)
         {
@@ -27,6 +28,7 @@ namespace Services
             _authService = new Lazy<IAuthService>(new AuthService(userManager, mapper, configuration));
             _categoryService = new Lazy<ICategoryService>(new CategoryService(repositoryManager, mapper));
             _cartService = new Lazy<ICartService>(new CartService(repositoryManager, mapper, userManager));
+            _ratingService = new Lazy<IRatingService>(new RatingService(repositoryManager, userManager));
         }
 
         public IStoreService stores => _service.Value;
@@ -38,5 +40,7 @@ namespace Services
         public ICategoryService category => _categoryService.Value;
 
         public ICartService cart => _cartService.Value;
+
+        public IRatingService rating => _ratingService.Value;
     }
 }

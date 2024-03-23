@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
+using SharedAPI.Data_Transfer;
 
 namespace eShop.Presentation.Controllers
 {
@@ -20,6 +21,10 @@ namespace eShop.Presentation.Controllers
             this.serviceManager = serviceManager;
         }
 
+        /// <summary>
+        /// Gets a list of all products in cart for the logged in user from bearer token.
+        /// </summary>
+        /// <returns>A list of products in cart.</returns>
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetProductsInCart()
@@ -31,6 +36,9 @@ namespace eShop.Presentation.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Checkout products in cart for logged in user.
+        /// </summary>
         [HttpPost("checkout")]
         [Authorize]
         public async Task<IActionResult> CheckoutProductsInCart()
@@ -47,5 +55,11 @@ namespace eShop.Presentation.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        //[HttpPatch("id:Guid")]
+        //public async Task<IActionResult> UpdateQty(Guid id, CartItemQtyUpdateDto cartItem)
+        //{
+
+        //}
     }
 }

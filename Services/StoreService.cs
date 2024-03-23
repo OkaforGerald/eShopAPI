@@ -81,15 +81,24 @@ namespace Services
 
             var result = await manager.stores.GetStoreById(id, trackChanges);
 
-            bool requestedByUser = result.UserId.Equals(user.Id);
-
             if(result is null)
             {
                 throw new StoreNotFoundException(id);
             }
+            bool requestedByUser = false;
+            if (result.UserId is not null)
+            {
+                requestedByUser = result.UserId.Equals(user.Id);
+            }
 
             var response = mapper.Map<StoresDto>(result);
             response.requestedByOwner = requestedByUser;
+            if (result.UserId is not null)
+            {
+                var owner = await userManager.FindByIdAsync(result.UserId);
+                var name = $"{owner.FirstName} {owner.FirstName}";
+                response.OwnedBy = name;
+            }
             return response;
         }
 

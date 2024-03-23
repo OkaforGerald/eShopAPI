@@ -1,3 +1,4 @@
+using System.Reflection;
 using Contracts;
 using EmailSender;
 using Entities.Models;
@@ -84,6 +85,17 @@ builder.Services.AddSwaggerGen(opt =>
         Scheme = "bearer"
     });
 
+    var xmlFiles = new[]
+ {
+        Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetEntryAssembly().GetName().Name}.xml"),
+        Path.Combine(AppContext.BaseDirectory, "eShop.Presentation.xml")
+    };
+
+    foreach (var xmlFile in xmlFiles)
+    {
+        opt.IncludeXmlComments(xmlFile);
+    }
+
     opt.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -111,10 +123,10 @@ using(var scope = app.Services.CreateScope())
     try
     {
         var dbContext = services.GetRequiredService<RepositoryContext>();
-        //if (dbContext.Database.IsSqlServer())
-        //{
-        //    dbContext.Database.Migrate();
-        //}
+        if (dbContext.Database.IsSqlServer())
+        {
+            dbContext.Database.Migrate();
+        }
     }catch(Exception ex)
     {
         throw;
@@ -122,11 +134,12 @@ using(var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
     app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "eShopApi");
+        c.RoutePrefix = "api-docs"; // You can change the URL path as needed.
+    });
 
 app.UseHttpsRedirection();
 

@@ -27,9 +27,12 @@
         </div>
     }
 </div>
-<div class="row">
-    <ProductTable Products="ProductList" OnDeleted="DeleteProduct" StoreId="@StoreID" />
-</div>
+@if (ProductList.Any())
+{
+    <div class="row">
+        <ProductTable Products="ProductList" OnDeleted="DeleteProduct" StoreId="@StoreID" canAct = "ProductList[0].canAct" />
+    </div>
+}
 <div class="row">
     <div class="col">
         <Pagination MetaData="MetaData" Spread="2" SelectedPage="SelectedPage" />

@@ -34,6 +34,10 @@ namespace eShop.Presentation.Controllers
             this.sender = sender;   
         }
 
+        /// <summary>
+        /// Gets a list of all products in a store fit the request parameters.
+        /// </summary>
+        /// <returns>A list of products.</returns>
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetProducts(Guid StoreID, [FromQuery] ProductParameters parameters)
@@ -65,6 +69,10 @@ namespace eShop.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets a product in a store.
+        /// </summary>
+        /// <returns>A product.</returns>
         [HttpGet("{Id}", Name = "ProductById")]
         public async Task<IActionResult> ProductById(Guid StoreID, Guid Id)
         {
@@ -84,6 +92,9 @@ namespace eShop.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Create product in a store that belongs to a user.
+        /// </summary>
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> CreateProduct(Guid StoreID, [FromBody] ProductModifyingDto product)
@@ -122,6 +133,9 @@ namespace eShop.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Add product to cart.
+        /// </summary>
         [HttpPost("{Id:Guid}/cart")]
         [Authorize]
         public async Task<IActionResult> AddProductToCart(Guid StoreID, Guid Id)
@@ -224,6 +238,90 @@ namespace eShop.Presentation.Controllers
                     StatusCode = 401,
                     Error = ex.Message
                 });
+            }
+        }
+
+        /// <summary>
+        /// Create rating by the logged in user for a product.
+        /// </summary>
+        [HttpPost("{Id:Guid}/ratings")]
+        [Authorize]
+        public async Task<IActionResult> AddRating(Guid StoreID, Guid Id, RatingAndReviewDto ratingAndReview)
+        {
+            try
+            {
+                var username = HttpContext?.User?.Identity?.Name;
+
+                await serviceManager.rating.CreateRating(username, StoreID, Id, ratingAndReview);
+
+                return NoContent();
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get all reviews and ratings for a product.
+        /// </summary>
+        [HttpGet("{Id:Guid}/ratings")]
+        [Authorize]
+        public async Task<IActionResult> GetRatingsForProduct(Guid StoreID, Guid Id)
+        {
+            try
+            {
+                var username = HttpContext?.User?.Identity?.Name;
+
+                var reviews = await serviceManager.rating.GetReviewsForProduct(StoreID, Id);
+
+                return Ok(reviews);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get the reviews and ratings for a product made by the logged in user.
+        /// </summary>
+        [HttpGet("{Id:Guid}/ratings/user")]
+        [Authorize]
+        public async Task<IActionResult> GetRatingForProductByUser(Guid StoreID, Guid Id)
+        {
+            try
+            {
+                var username = HttpContext?.User?.Identity?.Name;
+
+                var reviews = await serviceManager.rating.GetReviewsByUser(username, StoreID, Id);
+
+                return Ok(reviews);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Update review previously made by a user on a product.
+        /// </summary>
+        [HttpPut("{Id:Guid}/ratings")]
+        [Authorize]
+        public async Task<IActionResult> UpdateRating(Guid StoreID, Guid Id, RatingAndReviewDto ratingAndReview)
+        {
+            try
+            {
+                var username = HttpContext?.User?.Identity?.Name;
+
+                await serviceManager.rating.UpdateRating(username, StoreID, Id, ratingAndReview);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
 

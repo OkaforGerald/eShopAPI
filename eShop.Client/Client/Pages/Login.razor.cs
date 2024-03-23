@@ -29,7 +29,7 @@ namespace eShop.Client.Client.Pages
             }
             else
             {
-                NavigationManager.NavigateTo("/products");
+                NavigationManager.NavigateTo("/");
             }
         }
     }

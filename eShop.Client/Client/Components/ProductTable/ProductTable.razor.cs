@@ -13,6 +13,9 @@ namespace eShop.Client.Client.Components.ProductTable
         public EventCallback<Guid> OnDeleted { get; set; }
 
         [Parameter]
+        public bool canAct { get; set; }
+
+        [Parameter]
         public string StoreId { get; set; }
 
         [Parameter]

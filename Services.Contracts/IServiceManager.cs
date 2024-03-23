@@ -17,5 +17,7 @@ namespace Services.Contracts
         IAuthService auth { get; }
 
         ICartService cart { get; }
+
+        IRatingService rating { get; }
     }
 }

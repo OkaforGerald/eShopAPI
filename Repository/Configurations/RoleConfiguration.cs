@@ -16,11 +16,13 @@ namespace Repository.Configurations
             builder.HasData(
                 new IdentityRole
                 {
+                    Id = "d43c8eb3-031a-4d2a-ac58-d904a278f7d8",
                     Name = "User",
                     NormalizedName = "USER"
                 },
                 new IdentityRole
                 {
+                    Id = "9156815e-c29e-46ad-b7ae-2809eaa5850b",
                     Name = "Administrator",
                     NormalizedName = "ADMINISTRATOR"
                 }

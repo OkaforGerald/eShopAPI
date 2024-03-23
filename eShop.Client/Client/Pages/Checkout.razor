@@ -1,4 +1,8 @@
 ﻿@page "/checkout"
+@using System.Globalization;
+@using Microsoft.AspNetCore.Components.Authorization
+<CascadingAuthenticationState>
+<AuthorizeView>
 <div class="row my-5 justify-content-center">
     <div class="col col-xl-10">
         <h3><b>Checkout</b></h3>
@@ -6,16 +10,36 @@
 </div>
 <div class="row justify-content-center">
     <div class="col-md-6 col-xl-5">
-        <div class="mb-5 payment-method">
-            <h6 class="mb-3 fw-bold">Payment Method</h6>
-            <button type="submit" form="address-select" class="address-select">
-                <div class="paystack-logo">
-                    Pay with&nbsp;
-                    <img src="/Images/paystack-2.png" alt="" width="100" />
-                </div>
-            </button>
-        </div>
-        <div class="mb-5 delivery-address">
+        @if (ShoppingCartItems != null)
+                {
+                    @if (ShoppingCartItems?.Count() > 0)
+                    {
+                        <div class="mb-5 payment-method">
+                            <h6 class="mb-3 fw-bold">Payment Method</h6>
+                            <form method="POST" action="https://checkout.flutterwave.com/v3/hosted/pay">
+                                <div>
+                                    @* <button type="submit" id = "start-payment-button" form="address-select" class="address-select">
+                        <div class="paystack-logo">
+                            Pay with&nbsp;
+                            <img src="/Images/flw.png" alt="" width="100" />
+                        </div>
+                    </button> *@
+                                    @* Your order is N2,000 *@
+                                </div>
+                                <input type="hidden" name="public_key" value="FLWPUBK_TEST-867ad0ba1c857bacda89db06983b908b-X" />
+                                <input type="hidden" name="customer[email]" value="@context.User.Identity!.Name" />
+                                <input type="hidden" name="customer[name]" value="Ayomide Jimi-Oni" />
+                                <input type="hidden" name="tx_ref" value="@PaymentAmount" />
+                                <input type="hidden" name="amount" value="@PaymentAmount" />
+                                <input type="hidden" name="currency" value="NGN" />
+                                <input type="hidden" name="meta[source]" value="docs-html-test" />
+                                <br>
+                                <button type="submit" id="start-payment-button">Pay with Flutterwave</button>
+                            </form>
+                        </div>
+                    }
+                }
+                <div class="mb-5 delivery-address">
             <div class="col-8">
                 @if (ShowAddressForm == false)
                 {
@@ -68,12 +92,12 @@
                         {
                             <tr>
                                 <td>@item.QuantityInCart x @item.Product.Name</td>
-                                <td>@item.Product.Price.ToString("C")</td>
+                                <td>@item.Product.Price.ToString("C", new CultureInfo("HA-LATN-NG"))</td>
                             </tr>
                         }
                         <tr>
                             <td><b>Total</b></td>
-                            <td><b>@PaymentAmount.ToString("C")</b></td>
+                            <td><b>@PaymentAmount.ToString("C", new CultureInfo("HA-LATN-NG"))</b></td>
                         </tr>
                     </tbody>
                 </table>
@@ -85,3 +109,5 @@
         </div>
 }
 </div>
+    </AuthorizeView>
+</CascadingAuthenticationState>

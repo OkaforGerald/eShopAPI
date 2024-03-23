@@ -1,4 +1,5 @@
 ﻿@page "/cart"
+@using System.Globalization;
 @if (ShoppingCartItems == null)
 {
     <p>Loading...</p>
@@ -20,8 +21,8 @@ else
                         <h5>@item.Product.Name</h5>
                         <div class="mb-4">@item.Product.Description</div>
                         <span>
-                             price: <b>@item.Product.Price.ToString("c")</b>
-                            <input @oninput = "()=>UpdateQty_Input(item.Product.Id)"
+                                price: <b>@item.Product.Price.ToString("C", new CultureInfo("HA-LATN-NG"))</b>
+                                <input @oninput="()=>UpdateQty_Input(item.Product.Id)"
                             type="number" @bind=@item.QuantityInCart />
                             <button data-itemid="@item.Product.Id" class="btn btn-info btn-sm update-qty">Update Quantity</button>
                         </span>

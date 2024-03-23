@@ -18,6 +18,10 @@ namespace eShop.Presentation.Controllers
         {
             this.webHostEnvironment = webHostEnvironment;
         }
+        /// <summary>
+        /// Receives product image from request
+        /// </summary>
+        /// <returns>Image Url</returns>
         [HttpPost]
         public async Task<IActionResult> Upload()
         {

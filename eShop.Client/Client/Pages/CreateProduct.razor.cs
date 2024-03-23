@@ -32,7 +32,6 @@ namespace eShop.Client.Client.Pages
         {
             await ProductRepo.CreateProduct(_product, Id);
             navigationManager.NavigateTo($"store/{Id}/products");
-            _notification.Show();
         }
 
         private void AssignImageUrl(string imgUrl) => _product.ImageUrl = imgUrl;

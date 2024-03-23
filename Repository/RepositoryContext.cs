@@ -66,5 +66,7 @@ namespace Repository
         public DbSet<Order> Orders { get; set; }
 
         public DbSet<OrderProducts> OrdersProducts { get; set;}
+
+        public DbSet<RatingAndReview> RatingAndReviews { get; set; }
     }
 }

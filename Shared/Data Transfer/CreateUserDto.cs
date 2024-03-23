@@ -16,6 +16,7 @@ namespace SharedAPI.Data_Transfer
         [Required(ErrorMessage = "Last Name Required")]
         public string? LastName { get; set; }
 
+        [RegularExpression(@"^[a-zA-Z]+\d{4}@student\.babcock\.edu\.ng$", ErrorMessage ="Please input a valid babcock Email Address")]
         [EmailAddress(ErrorMessage ="Please Provide a Valid Email Address")]
         [Required]
         public string? Email { get; set; }
